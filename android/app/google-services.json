@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "894696116565",
+    "project_id": "ehelpdesk-ueu",
+    "storage_bucket": "ehelpdesk-ueu.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:894696116565:android:0260a14b8a0c8ff76f5fdc",
+        "android_client_info": {
+          "package_name": "com.example.ehelpdesk"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "894696116565-iilk4pcqphuhu9aara2kng37qipdmkpk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_z7-FPGDHzlncowiPPlh1FODgIBGgIbg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "894696116565-iilk4pcqphuhu9aara2kng37qipdmkpk.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "894696116565-3dbtdj800ee42tmrn9fj9ov9v3sirsi1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.ehelpdesk"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
