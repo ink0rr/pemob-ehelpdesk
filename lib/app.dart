@@ -2,6 +2,7 @@ import 'package:ehelpdesk/pages/home_page.dart';
 import 'package:ehelpdesk/pages/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -15,6 +16,9 @@ class App extends HookWidget {
       theme: ThemeData(
         primarySwatch: getMaterialColor(const Color(0xFF6AB17E)),
         appBarTheme: const AppBarTheme(
+          systemOverlayStyle: SystemUiOverlayStyle(
+            statusBarBrightness: Brightness.light,
+          ),
           titleTextStyle: TextStyle(
             color: Colors.black,
             fontSize: 20,

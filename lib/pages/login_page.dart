@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:ehelpdesk/widgets/labeled_checkbox.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -21,6 +19,9 @@ class LoginPage extends HookConsumerWidget {
     final hidePassword = useState(true);
     final rememberMe = useState(false);
     return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 0,
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -140,7 +141,7 @@ class LoginPage extends HookConsumerWidget {
                       }
                     },
                   ),
-                  if (Platform.isAndroid)
+                  if (true)
                     Column(children: [
                       const SizedBox(height: 24),
                       const Row(
