@@ -14,8 +14,9 @@ class AskQuestionPage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final category = useState<String?>(null);
     final title = useTextEditingController();
-    final category = useState<String?>(categories.first);
+    final description = useTextEditingController();
 
     return Scaffold(
       appBar: AppBar(
@@ -50,7 +51,7 @@ class AskQuestionPage extends HookWidget {
                 ),
                 const SizedBox(height: 24),
                 TextFormField(
-                  controller: title,
+                  controller: description,
                   decoration: const InputDecoration(
                     labelText: 'Deskripsi',
                   ),
