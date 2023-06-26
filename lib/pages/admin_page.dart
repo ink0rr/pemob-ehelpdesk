@@ -1,34 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
-class HomeAdmin extends StatelessWidget {
-  // This widget is the root of your application.
+class AdminPage extends HookWidget {
+  const AdminPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(
-        children: [
-          SizedBox(
-            height: 20,
-          ),
-          Container(
-            margin: EdgeInsets.all(10),
-            child: TextField(
-              decoration: InputDecoration(
-                fillColor: Colors.white,
-                prefixIcon: const Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(32),
+      body: SafeArea(
+        child: ListView(
+          children: [
+            const SizedBox(height: 20),
+            Container(
+              margin: const EdgeInsets.all(10),
+              child: TextField(
+                decoration: InputDecoration(
+                  fillColor: Colors.white,
+                  prefixIcon: const Icon(Icons.search),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(32),
+                  ),
+                  labelText: 'Search Question',
                 ),
-                labelText: 'Search Question',
               ),
             ),
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          Container(
-              padding: EdgeInsets.all(10),
-              margin: EdgeInsets.all(10),
+            const SizedBox(height: 20),
+            Container(
+              padding: const EdgeInsets.all(10),
+              margin: const EdgeInsets.all(10),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(10),
@@ -43,23 +42,27 @@ class HomeAdmin extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  Column(
+                  const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Naruto Uzumaki',
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold)),
+                      Text(
+                        'Naruto Uzumaki',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                       Text('Judul: Mencari lokasi toilet'),
                     ],
                   ),
-                  Spacer(),
+                  const Spacer(),
                   Container(
-                    padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                    padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
                     decoration: BoxDecoration(
                       color: Colors.blue,
                       borderRadius: BorderRadius.circular(40),
                     ),
-                    child: Text(
+                    child: const Text(
                       'Open',
                       style: TextStyle(
                         color: Colors.white,
@@ -68,10 +71,11 @@ class HomeAdmin extends StatelessWidget {
                     ),
                   ),
                 ],
-              )),
-          Container(
-              padding: EdgeInsets.all(10),
-              margin: EdgeInsets.all(10),
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.all(10),
+              margin: const EdgeInsets.all(10),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(10),
@@ -86,23 +90,27 @@ class HomeAdmin extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  Column(
+                  const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Naruto Uzumaki',
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold)),
+                      Text(
+                        'Naruto Uzumaki',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                       Text('Judul: Mencari lokasi toilet'),
                     ],
                   ),
-                  Spacer(),
+                  const Spacer(),
                   Container(
-                    padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                    padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
                     decoration: BoxDecoration(
                       color: Colors.green,
                       borderRadius: BorderRadius.circular(40),
                     ),
-                    child: Text(
+                    child: const Text(
                       'Solved',
                       style: TextStyle(
                         color: Colors.white,
@@ -111,10 +119,11 @@ class HomeAdmin extends StatelessWidget {
                     ),
                   ),
                 ],
-              )),
-          Container(
-              padding: EdgeInsets.all(10),
-              margin: EdgeInsets.all(10),
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.all(10),
+              margin: const EdgeInsets.all(10),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(10),
@@ -129,23 +138,27 @@ class HomeAdmin extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  Column(
+                  const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Naruto Uzumaki',
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold)),
+                      Text(
+                        'Naruto Uzumaki',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                       Text('Judul: Mencari lokasi toilet'),
                     ],
                   ),
-                  Spacer(),
+                  const Spacer(),
                   Container(
-                    padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                    padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
                     decoration: BoxDecoration(
                       color: Colors.grey,
                       borderRadius: BorderRadius.circular(40),
                     ),
-                    child: Text(
+                    child: const Text(
                       'Closed',
                       style: TextStyle(
                         color: Colors.white,
@@ -154,8 +167,10 @@ class HomeAdmin extends StatelessWidget {
                     ),
                   ),
                 ],
-              )),
-        ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
