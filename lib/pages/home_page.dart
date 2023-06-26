@@ -1,4 +1,5 @@
 import 'package:ehelpdesk/models/question.dart';
+import 'package:ehelpdesk/pages/chat_page.dart';
 import 'package:ehelpdesk/pages/profile_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -74,7 +75,11 @@ class HomePage extends HookWidget {
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: InkWell(
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => const ChatPage(),
+                          ));
+                        },
                         child: Padding(
                           padding: const EdgeInsets.all(24),
                           child: Row(
