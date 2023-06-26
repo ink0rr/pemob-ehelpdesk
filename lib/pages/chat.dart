@@ -14,7 +14,7 @@ class _ChatState extends State<Chat> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("E-helpDesk"),
+        title: Text("Admin Helpdesk"),
       ),
       body: Stack(
         children: [
