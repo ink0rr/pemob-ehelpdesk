@@ -18,7 +18,7 @@ class App extends HookWidget {
           style: ElevatedButton.styleFrom(
             backgroundColor: const Color(0xFF6AB17E),
             foregroundColor: Colors.white,
-            minimumSize: Size.fromHeight(48),
+            minimumSize: const Size.fromHeight(48),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(6),
             ),

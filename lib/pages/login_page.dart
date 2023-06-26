@@ -24,7 +24,7 @@ class LoginPage extends HookConsumerWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(32.0),
+            padding: const EdgeInsets.all(24.0),
             child: Form(
               autovalidateMode: AutovalidateMode.onUserInteraction,
               child: Column(
