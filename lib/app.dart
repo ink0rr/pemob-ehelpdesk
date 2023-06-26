@@ -13,7 +13,21 @@ class App extends HookWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.green,
+        primarySwatch: getMaterialColor(const Color(0xFF6AB17E)),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xFF6AB17E),
+            foregroundColor: Colors.white,
+            minimumSize: Size.fromHeight(48),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(6),
+            ),
+            textStyle: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
         textTheme: GoogleFonts.poppinsTextTheme(),
       ),
       home: FirebaseAuth.instance.currentUser != null
@@ -21,4 +35,20 @@ class App extends HookWidget {
           : const LoginPage(),
     );
   }
+}
+
+MaterialColor getMaterialColor(Color color) {
+  final Map<int, Color> shades = {
+    50: color,
+    100: color,
+    200: color,
+    300: color,
+    400: color,
+    500: color,
+    600: color,
+    700: color,
+    800: color,
+    900: color,
+  };
+  return MaterialColor(color.value, shades);
 }
