@@ -15,6 +15,7 @@ dependencies:
   google_fonts: ^5.1.0
   firebase_core: ^2.14.0
   firebase_auth: ^4.6.3
+  chat_bubbles: ^1.4.1
 
 dev_dependencies:
   flutter_test:
