@@ -5,11 +5,11 @@ class AskQuestionPage extends HookWidget {
   const AskQuestionPage({super.key});
 
   final List<String> categories = const [
-    "Materi Perkuliahan",
-    "Siakad",
-    "E-learning",
-    "Jadwal Kuliah",
-    "Biaya Kuliah",
+    'Materi Perkuliahan',
+    'Siakad',
+    'E-learning',
+    'Jadwal Kuliah',
+    'Biaya Kuliah',
   ];
 
   @override
@@ -19,7 +19,7 @@ class AskQuestionPage extends HookWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Tanya Help-Desk"),
+        title: const Text('Tanya Help-Desk'),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -29,7 +29,7 @@ class AskQuestionPage extends HookWidget {
               children: [
                 DropdownButtonFormField(
                   decoration: const InputDecoration(
-                    labelText: "Kategori",
+                    labelText: 'Kategori',
                   ),
                   items: categories
                       .map((e) => DropdownMenuItem(
@@ -45,24 +45,24 @@ class AskQuestionPage extends HookWidget {
                 TextFormField(
                   controller: title,
                   decoration: const InputDecoration(
-                    labelText: "Judul",
+                    labelText: 'Judul',
                   ),
                 ),
                 const SizedBox(height: 24),
                 TextFormField(
                   controller: title,
                   decoration: const InputDecoration(
-                    labelText: "Deskripsi",
+                    labelText: 'Deskripsi',
                   ),
                 ),
                 const SizedBox(height: 48),
                 ElevatedButton(
-                  child: const Text("Ajukan Pertanyaan"),
+                  child: const Text('Ajukan Pertanyaan'),
                   onPressed: () {},
                 ),
                 const SizedBox(height: 18),
                 OutlinedButton(
-                  child: const Text("Cancel"),
+                  child: const Text('Cancel'),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },

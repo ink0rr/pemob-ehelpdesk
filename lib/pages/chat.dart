@@ -14,7 +14,7 @@ class _ChatState extends State<Chat> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Admin Helpdesk"),
+        title: Text('Admin Helpdesk'),
       ),
       body: Stack(
         children: [
@@ -36,7 +36,7 @@ class _ChatState extends State<Chat> {
                 textStyle: TextStyle(color: Colors.white, fontSize: 16),
               ),
               BubbleSpecialThree(
-                text: "Lu pikir aja sendiri!!!",
+                text: 'Lu pikir aja sendiri!!!',
                 color: Color(0xFFE8E8EE),
                 tail: true,
                 isSender: false,

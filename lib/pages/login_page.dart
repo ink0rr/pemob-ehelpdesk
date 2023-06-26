@@ -17,7 +17,7 @@ class LoginPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final email = useTextEditingController();
     final password = useTextEditingController();
-    final loginError = useState("");
+    final loginError = useState('');
     final hidePassword = useState(true);
     final rememberMe = useState(false);
     return Scaffold(
@@ -46,13 +46,13 @@ class LoginPage extends HookConsumerWidget {
                       labelText: 'Email',
                     ),
                     onChanged: (_) {
-                      loginError.value = "";
+                      loginError.value = '';
                     },
                     validator: (value) {
-                      if (!EmailValidator.validate(value ?? "")) {
-                        return "Please enter a valid email";
+                      if (!EmailValidator.validate(value ?? '')) {
+                        return 'Please enter a valid email';
                       }
-                      if (loginError.value != "") {
+                      if (loginError.value != '') {
                         return loginError.value;
                       }
                       return null;
@@ -78,13 +78,13 @@ class LoginPage extends HookConsumerWidget {
                       ),
                     ),
                     onChanged: (_) {
-                      loginError.value = "";
+                      loginError.value = '';
                     },
                     validator: (value) {
-                      if (value == "") {
-                        return "Please enter a password";
+                      if (value == '') {
+                        return 'Please enter a password';
                       }
-                      if (loginError.value != "") {
+                      if (loginError.value != '') {
                         return loginError.value;
                       }
                       return null;
@@ -95,7 +95,7 @@ class LoginPage extends HookConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       LabeledCheckbox(
-                        label: "Remember me",
+                        label: 'Remember me',
                         value: rememberMe.value,
                         onChanged: (value) {
                           rememberMe.value = value!;
@@ -104,7 +104,7 @@ class LoginPage extends HookConsumerWidget {
                       TextButton(
                         onPressed: () {},
                         child: const Text(
-                          "Forgot Password?",
+                          'Forgot Password?',
                           style: TextStyle(
                             color: Color(0xFFF52F2F),
                           ),
@@ -130,9 +130,9 @@ class LoginPage extends HookConsumerWidget {
                         }
                       } on FirebaseAuthException catch (e) {
                         switch (e.code) {
-                          case "user-not-found":
-                          case "wrong-password":
-                            loginError.value = "Incorrect email or password";
+                          case 'user-not-found':
+                          case 'wrong-password':
+                            loginError.value = 'Incorrect email or password';
                             break;
                           default:
                             rethrow;
@@ -151,7 +151,7 @@ class LoginPage extends HookConsumerWidget {
                               thickness: 2,
                             ),
                           ),
-                          Text("or continue with"),
+                          Text('or continue with'),
                           Expanded(
                             child: Divider(
                               indent: 12,
@@ -172,7 +172,7 @@ class LoginPage extends HookConsumerWidget {
                         child: InkWell(
                           child: Padding(
                             padding: const EdgeInsets.all(16),
-                            child: SvgPicture.asset("assets/icons/google.svg"),
+                            child: SvgPicture.asset('assets/icons/google.svg'),
                           ),
                           onTap: () async {
                             final credentials = await FirebaseAuth.instance

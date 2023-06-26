@@ -46,10 +46,10 @@ class HomeAdmin extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Naruto Uzumaki",
+                      Text('Naruto Uzumaki',
                           style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold)),
-                      Text("Judul: Mencari lokasi toilet"),
+                      Text('Judul: Mencari lokasi toilet'),
                     ],
                   ),
                   Spacer(),
@@ -60,7 +60,7 @@ class HomeAdmin extends StatelessWidget {
                       borderRadius: BorderRadius.circular(40),
                     ),
                     child: Text(
-                      "Open",
+                      'Open',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 15,
@@ -89,10 +89,10 @@ class HomeAdmin extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Naruto Uzumaki",
+                      Text('Naruto Uzumaki',
                           style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold)),
-                      Text("Judul: Mencari lokasi toilet"),
+                      Text('Judul: Mencari lokasi toilet'),
                     ],
                   ),
                   Spacer(),
@@ -103,7 +103,7 @@ class HomeAdmin extends StatelessWidget {
                       borderRadius: BorderRadius.circular(40),
                     ),
                     child: Text(
-                      "Solved",
+                      'Solved',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 15,
@@ -132,10 +132,10 @@ class HomeAdmin extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Naruto Uzumaki",
+                      Text('Naruto Uzumaki',
                           style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold)),
-                      Text("Judul: Mencari lokasi toilet"),
+                      Text('Judul: Mencari lokasi toilet'),
                     ],
                   ),
                   Spacer(),
@@ -146,7 +146,7 @@ class HomeAdmin extends StatelessWidget {
                       borderRadius: BorderRadius.circular(40),
                     ),
                     child: Text(
-                      "Closed",
+                      'Closed',
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 15,

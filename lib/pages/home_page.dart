@@ -29,7 +29,7 @@ class HomePage extends HookWidget {
                           (route) => false);
                     }
                   },
-                  child: const Text("Sign Out"),
+                  child: const Text('Sign Out'),
                 ),
               ],
             ),
@@ -37,7 +37,7 @@ class HomePage extends HookWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        tooltip: "Open Ticket",
+        tooltip: 'Open Ticket',
         child: const Icon(
           Icons.add,
           color: Colors.white,
