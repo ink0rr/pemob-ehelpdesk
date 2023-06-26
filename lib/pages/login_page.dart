@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:ehelpdesk/widgets/labeled_checkbox.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -141,7 +143,7 @@ class LoginPage extends HookConsumerWidget {
                       }
                     },
                   ),
-                  if (true)
+                  if (Platform.isAndroid)
                     Column(children: [
                       const SizedBox(height: 24),
                       const Row(
