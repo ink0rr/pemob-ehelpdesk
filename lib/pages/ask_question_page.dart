@@ -1,3 +1,5 @@
+import 'package:ehelpdesk/models/question.dart';
+import 'package:ehelpdesk/widgets/async_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
@@ -14,6 +16,7 @@ class AskQuestionPage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final form = useMemoized(() => GlobalKey<FormState>(), []);
     final category = useState<String?>(null);
     final title = useTextEditingController();
     final description = useTextEditingController();
@@ -26,49 +29,83 @@ class AskQuestionPage extends HookWidget {
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(24.0),
-            child: Column(
-              children: [
-                DropdownButtonFormField(
-                  decoration: const InputDecoration(
-                    labelText: 'Kategori',
+            child: Form(
+              key: form,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              child: Column(
+                children: [
+                  DropdownButtonFormField(
+                    decoration: const InputDecoration(
+                      labelText: 'Kategori',
+                    ),
+                    items: categories
+                        .map((e) => DropdownMenuItem(
+                              value: e,
+                              child: Text(e),
+                            ))
+                        .toList(),
+                    onChanged: (value) {
+                      category.value = value;
+                    },
+                    validator: (value) {
+                      if (value == null || value == '') {
+                        return 'Kategori tidak boleh kosong';
+                      }
+                      return null;
+                    },
                   ),
-                  items: categories
-                      .map((e) => DropdownMenuItem(
-                            value: e,
-                            child: Text(e),
-                          ))
-                      .toList(),
-                  onChanged: (value) {
-                    category.value = value;
-                  },
-                ),
-                const SizedBox(height: 24),
-                TextFormField(
-                  controller: title,
-                  decoration: const InputDecoration(
-                    labelText: 'Judul',
+                  const SizedBox(height: 24),
+                  TextFormField(
+                    controller: title,
+                    decoration: const InputDecoration(
+                      labelText: 'Judul',
+                    ),
+                    validator: (value) {
+                      if (value == null || value == '') {
+                        return 'Judul tidak boleh kosong';
+                      }
+                      return null;
+                    },
                   ),
-                ),
-                const SizedBox(height: 24),
-                TextFormField(
-                  controller: description,
-                  decoration: const InputDecoration(
-                    labelText: 'Deskripsi',
+                  const SizedBox(height: 24),
+                  TextFormField(
+                    controller: description,
+                    decoration: const InputDecoration(
+                      labelText: 'Deskripsi',
+                    ),
+                    validator: (value) {
+                      if (value == null || value == '') {
+                        return 'Deskripsi tidak boleh kosong';
+                      }
+                      return null;
+                    },
                   ),
-                ),
-                const SizedBox(height: 48),
-                ElevatedButton(
-                  child: const Text('Ajukan Pertanyaan'),
-                  onPressed: () {},
-                ),
-                const SizedBox(height: 18),
-                OutlinedButton(
-                  child: const Text('Cancel'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
+                  const SizedBox(height: 48),
+                  AsyncButton(
+                    child: const Text('Ajukan Pertanyaan'),
+                    onPressed: () async {
+                      if (form.currentState?.validate() != true) return;
+
+                      await Question.add(
+                        category: category.value!,
+                        title: title.text,
+                        description: description.text,
+                      );
+
+                      if (context.mounted) {
+                        Navigator.of(context).pop();
+                      }
+                    },
+                  ),
+                  const SizedBox(height: 18),
+                  OutlinedButton(
+                    child: const Text('Cancel'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ),

@@ -11,17 +11,10 @@ import 'ask_question_page.dart';
 class HomePage extends HookWidget {
   const HomePage({super.key});
 
-  final questions = const <Question>[
-    Question(
-      category: QuestionCategory.siakad,
-      title: 'Mengecek Jadwal Perkuliahan',
-      description:
-          'Saya ingin menanyakan cara mengecek jadwal perkuliahan lewat Siakad, dimana...',
-    )
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser!;
+
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 0,
@@ -72,52 +65,83 @@ class HomePage extends HookWidget {
                   ],
                 ),
                 const SizedBox(height: 24),
-                ...questions.map((e) => Card(
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: InkWell(
-                        onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => const ChatPage(),
-                          ));
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(24),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SvgPicture.asset('assets/icons/question.svg'),
-                              const SizedBox(width: 14),
-                              Flexible(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Text(
-                                      'Question #1',
-                                      style: TextStyle(
-                                        fontSize: 12,
+                StreamBuilder(
+                  stream: Question.getSnapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    final data = snapshot.data?.docs;
+                    if (data == null || data.isEmpty) {
+                      return const Center(child: Text('No data'));
+                    }
+                    final questions = data
+                        .map((e) => Question.fromSnapshot(e))
+                        .where((element) => element.authorId == user.uid)
+                        .toList();
+
+                    return Column(
+                      children: [
+                        ...questions.map(
+                          (e) => Padding(
+                            padding: const EdgeInsets.only(bottom: 16),
+                            child: Card(
+                              elevation: 2,
+                              shadowColor: const Color(0xB2E2E4EB),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => const ChatPage(),
+                                  ));
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(24),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SvgPicture.asset(
+                                        'assets/icons/question.svg',
                                       ),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Text(
-                                      e.title,
-                                      style: const TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Text(e.description),
-                                  ],
+                                      const SizedBox(width: 14),
+                                      Flexible(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              e.category,
+                                              style: const TextStyle(
+                                                fontSize: 12,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 8),
+                                            Text(
+                                              e.title,
+                                              style: const TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 8),
+                                            Text(e.description),
+                                          ],
+                                        ),
+                                      )
+                                    ],
+                                  ),
                                 ),
-                              )
-                            ],
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                    ))
+                        )
+                      ],
+                    );
+                  },
+                )
               ],
             ),
           ),
