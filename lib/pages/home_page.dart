@@ -1,4 +1,5 @@
 import 'package:ehelpdesk/models/question.dart';
+import 'package:ehelpdesk/models/user_data.dart';
 import 'package:ehelpdesk/pages/chat_page.dart';
 import 'package:ehelpdesk/pages/profile_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -45,23 +46,31 @@ class HomePage extends HookWidget {
                       ),
                     ),
                     const SizedBox(width: 16),
-                    InkWell(
-                      child: CircleAvatar(
-                        radius: 24,
-                        child: Text(
-                          FirebaseAuth.instance.currentUser!.email!
-                              .substring(0, 1)
-                              .toUpperCase(),
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 24,
+                    FutureBuilder(
+                      future: UserData.getCurrentUser(),
+                      builder: (context, snapshot) {
+                        final user = snapshot.data;
+                        if (user == null) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                        return InkWell(
+                          child: CircleAvatar(
+                            radius: 24,
+                            child: ClipOval(
+                              child: Image.network(
+                                user.avatarUrl,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                      onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const ProfilePage(),
-                        ));
+                          onTap: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => const ProfilePage(),
+                            ));
+                          },
+                        );
                       },
                     ),
                   ],
