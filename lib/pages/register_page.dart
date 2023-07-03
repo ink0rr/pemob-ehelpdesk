@@ -1,7 +1,5 @@
 import 'dart:io';
 
-import 'package:ehelpdesk/pages/register_page.dart';
-import 'package:ehelpdesk/widgets/labeled_checkbox.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
@@ -12,16 +10,18 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'home_page.dart';
 
-class LoginPage extends HookConsumerWidget {
-  const LoginPage({super.key});
+class RegisterPage extends HookConsumerWidget {
+  const RegisterPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final email = useTextEditingController();
     final password = useTextEditingController();
-    final loginError = useState('');
+    final confirmPassword = useTextEditingController();
+    final emailError = useState('');
+    final passwordError = useState('');
     final hidePassword = useState(true);
-    final rememberMe = useState(false);
+    final hideConfirmPassword = useState(true);
     final isLoading = useState(false);
 
     return Scaffold(
@@ -43,7 +43,7 @@ class LoginPage extends HookConsumerWidget {
                       children: [
                         const SizedBox(height: 64),
                         const Text(
-                          'Login',
+                          'Register',
                           style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
@@ -57,14 +57,14 @@ class LoginPage extends HookConsumerWidget {
                             labelText: 'Email',
                           ),
                           onChanged: (_) {
-                            loginError.value = '';
+                            emailError.value = '';
                           },
                           validator: (value) {
                             if (!EmailValidator.validate(value ?? '')) {
                               return 'Please enter a valid email';
                             }
-                            if (loginError.value != '') {
-                              return loginError.value;
+                            if (emailError.value != '') {
+                              return emailError.value;
                             }
                             return null;
                           },
@@ -89,58 +89,77 @@ class LoginPage extends HookConsumerWidget {
                             ),
                           ),
                           onChanged: (_) {
-                            loginError.value = '';
+                            passwordError.value = '';
                           },
                           validator: (value) {
-                            if (value == '') {
+                            if (value == null || value == '') {
                               return 'Please enter a password';
                             }
-                            if (loginError.value != '') {
-                              return loginError.value;
+                            if (value.length < 8) {
+                              return 'Password must be at least 8 characters';
+                            }
+                            if (passwordError.value != '') {
+                              return passwordError.value;
                             }
                             return null;
                           },
                         ),
                         const SizedBox(height: 24),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            LabeledCheckbox(
-                              label: 'Remember me',
-                              value: rememberMe.value,
-                              onChanged: (value) {
-                                rememberMe.value = value!;
+                        TextFormField(
+                          autofillHints: const [AutofillHints.password],
+                          controller: confirmPassword,
+                          obscureText: hideConfirmPassword.value,
+                          decoration: InputDecoration(
+                            labelText: 'Confirm Password',
+                            suffixIconColor: Colors.grey,
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                hideConfirmPassword.value
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                              ),
+                              onPressed: () {
+                                hideConfirmPassword.value =
+                                    !hideConfirmPassword.value;
                               },
                             ),
-                            TextButton(
-                              onPressed: () {},
-                              child: const Text(
-                                'Forgot Password?',
-                                style: TextStyle(
-                                  color: Color(0xFFF52F2F),
-                                ),
-                              ),
-                            )
-                          ],
+                          ),
+                          onChanged: (_) {
+                            passwordError.value = '';
+                          },
+                          validator: (value) {
+                            if (value == '') {
+                              return 'Please enter a password';
+                            }
+                            if (value != password.text) {
+                              return 'Passwords do not match';
+                            }
+                            if (passwordError.value != '') {
+                              return passwordError.value;
+                            }
+                            return null;
+                          },
                         ),
                         const SizedBox(height: 24),
                         if (isLoading.value)
                           const ElevatedButton(
                             onPressed: null,
                             child: SizedBox(
-                              height: 24,
                               width: 24,
-                              child: CircularProgressIndicator(strokeWidth: 2),
+                              height: 24,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                              ),
                             ),
                           )
                         else
                           ElevatedButton(
-                            child: const Text('Login'),
+                            child: const Text('Register'),
                             onPressed: () async {
                               try {
                                 isLoading.value = true;
                                 final credentials = await FirebaseAuth.instance
-                                    .signInWithEmailAndPassword(
+                                    .createUserWithEmailAndPassword(
                                   email: email.text,
                                   password: password.text,
                                 );
@@ -155,10 +174,17 @@ class LoginPage extends HookConsumerWidget {
                                 }
                               } on FirebaseAuthException catch (e) {
                                 switch (e.code) {
-                                  case 'user-not-found':
-                                  case 'wrong-password':
-                                    loginError.value =
-                                        'Incorrect email or password';
+                                  case 'email-already-in-use':
+                                    emailError.value =
+                                        'Email address is already taken';
+                                    break;
+                                  case 'invalid-email':
+                                    emailError.value =
+                                        'Please enter a valid email';
+                                    break;
+                                  case 'weak-password':
+                                    passwordError.value =
+                                        'Password is too weak';
                                     break;
                                   default:
                                     rethrow;
@@ -212,13 +238,10 @@ class LoginPage extends HookConsumerWidget {
 
                                     if (credentials.user != null &&
                                         context.mounted) {
-                                      Navigator.of(context).pushAndRemoveUntil(
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              const HomePage(),
-                                        ),
-                                        (_) => false,
-                                      );
+                                      Navigator.of(context)
+                                          .pushReplacement(MaterialPageRoute(
+                                        builder: (context) => const HomePage(),
+                                      ));
                                     }
                                   },
                                 ),
@@ -235,21 +258,16 @@ class LoginPage extends HookConsumerWidget {
                               Text.rich(
                                 textAlign: TextAlign.center,
                                 TextSpan(
-                                  text: "Don't have an account? ",
+                                  text: 'Already have an account? ',
                                   children: [
                                     TextSpan(
-                                      text: 'Register',
+                                      text: 'Login',
                                       style: const TextStyle(
                                         color: Color(0xFF6AB17E),
                                       ),
                                       recognizer: TapGestureRecognizer()
                                         ..onTap = () {
-                                          Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const RegisterPage(),
-                                            ),
-                                          );
+                                          Navigator.of(context).pop();
                                         },
                                     ),
                                   ],
