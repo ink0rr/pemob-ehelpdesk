@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:ehelpdesk/models/user_data.dart';
 import 'package:ehelpdesk/widgets/async_button.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -16,6 +17,7 @@ class RegisterPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final username = useTextEditingController();
     final email = useTextEditingController();
     final password = useTextEditingController();
     final confirmPassword = useTextEditingController();
@@ -51,7 +53,24 @@ class RegisterPage extends HookConsumerWidget {
                         ),
                         const SizedBox(height: 32),
                         TextFormField(
-                          autofillHints: const [AutofillHints.email],
+                          autofillHints: const [AutofillHints.username],
+                          controller: username,
+                          decoration: const InputDecoration(
+                            labelText: 'Username',
+                          ),
+                          validator: (value) {
+                            if (value == null || value == '') {
+                              return 'Please enter a username';
+                            }
+                            if (value.length < 3) {
+                              return 'Username must be at least 3 characters';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 24),
+                        TextFormField(
+                          autofillHints: const [AutofillHints.password],
                           controller: email,
                           decoration: const InputDecoration(
                             labelText: 'Email',
@@ -145,12 +164,20 @@ class RegisterPage extends HookConsumerWidget {
                           child: const Text('Register'),
                           onPressed: () async {
                             try {
-                              final credentials = await FirebaseAuth.instance
+                              final user = await FirebaseAuth.instance
                                   .createUserWithEmailAndPassword(
-                                email: email.text,
-                                password: password.text,
+                                    email: email.text,
+                                    password: password.text,
+                                  )
+                                  .then((c) => c.user);
+                              if (user == null) {
+                                throw Exception('Failed to register user');
+                              }
+                              await UserData.register(
+                                id: user.uid,
+                                username: username.text,
                               );
-                              if (credentials.user != null && context.mounted) {
+                              if (context.mounted) {
                                 Navigator.of(context).pushAndRemoveUntil(
                                   MaterialPageRoute(
                                     builder: (context) => const HomePage(),
