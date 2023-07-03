@@ -3,11 +3,11 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 
 class LabeledCheckbox extends HookWidget {
   const LabeledCheckbox({
-    Key? key,
+    super.key,
     required this.label,
     required this.value,
     required this.onChanged,
-  }) : super(key: key);
+  });
 
   final String label;
   final bool value;

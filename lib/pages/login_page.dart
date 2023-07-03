@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:ehelpdesk/pages/register_page.dart';
+import 'package:ehelpdesk/widgets/async_button.dart';
 import 'package:ehelpdesk/widgets/labeled_checkbox.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -22,7 +23,6 @@ class LoginPage extends HookConsumerWidget {
     final loginError = useState('');
     final hidePassword = useState(true);
     final rememberMe = useState(false);
-    final isLoading = useState(false);
 
     return Scaffold(
       appBar: AppBar(
@@ -124,50 +124,36 @@ class LoginPage extends HookConsumerWidget {
                           ],
                         ),
                         const SizedBox(height: 24),
-                        if (isLoading.value)
-                          const ElevatedButton(
-                            onPressed: null,
-                            child: SizedBox(
-                              height: 24,
-                              width: 24,
-                              child: CircularProgressIndicator(strokeWidth: 2),
-                            ),
-                          )
-                        else
-                          ElevatedButton(
-                            child: const Text('Login'),
-                            onPressed: () async {
-                              try {
-                                isLoading.value = true;
-                                final credentials = await FirebaseAuth.instance
-                                    .signInWithEmailAndPassword(
-                                  email: email.text,
-                                  password: password.text,
+                        AsyncButton(
+                          child: const Text('Login'),
+                          onPressed: () async {
+                            try {
+                              final credentials = await FirebaseAuth.instance
+                                  .signInWithEmailAndPassword(
+                                email: email.text,
+                                password: password.text,
+                              );
+                              if (credentials.user != null && context.mounted) {
+                                Navigator.of(context).pushAndRemoveUntil(
+                                  MaterialPageRoute(
+                                    builder: (context) => const HomePage(),
+                                  ),
+                                  (_) => false,
                                 );
-                                if (credentials.user != null &&
-                                    context.mounted) {
-                                  Navigator.of(context).pushAndRemoveUntil(
-                                    MaterialPageRoute(
-                                      builder: (context) => const HomePage(),
-                                    ),
-                                    (_) => false,
-                                  );
-                                }
-                              } on FirebaseAuthException catch (e) {
-                                switch (e.code) {
-                                  case 'user-not-found':
-                                  case 'wrong-password':
-                                    loginError.value =
-                                        'Incorrect email or password';
-                                    break;
-                                  default:
-                                    rethrow;
-                                }
-                              } finally {
-                                isLoading.value = false;
                               }
-                            },
-                          ),
+                            } on FirebaseAuthException catch (e) {
+                              switch (e.code) {
+                                case 'user-not-found':
+                                case 'wrong-password':
+                                  loginError.value =
+                                      'Incorrect email or password';
+                                  break;
+                                default:
+                                  rethrow;
+                              }
+                            }
+                          },
+                        ),
                         if (Platform.isAndroid)
                           Column(
                             children: [

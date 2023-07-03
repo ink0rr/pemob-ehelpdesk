@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:ehelpdesk/widgets/async_button.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
@@ -22,7 +23,6 @@ class RegisterPage extends HookConsumerWidget {
     final passwordError = useState('');
     final hidePassword = useState(true);
     final hideConfirmPassword = useState(true);
-    final isLoading = useState(false);
 
     return Scaffold(
       appBar: AppBar(
@@ -141,59 +141,42 @@ class RegisterPage extends HookConsumerWidget {
                           },
                         ),
                         const SizedBox(height: 24),
-                        if (isLoading.value)
-                          const ElevatedButton(
-                            onPressed: null,
-                            child: SizedBox(
-                              width: 24,
-                              height: 24,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                              ),
-                            ),
-                          )
-                        else
-                          ElevatedButton(
-                            child: const Text('Register'),
-                            onPressed: () async {
-                              try {
-                                isLoading.value = true;
-                                final credentials = await FirebaseAuth.instance
-                                    .createUserWithEmailAndPassword(
-                                  email: email.text,
-                                  password: password.text,
+                        AsyncButton(
+                          child: const Text('Register'),
+                          onPressed: () async {
+                            try {
+                              final credentials = await FirebaseAuth.instance
+                                  .createUserWithEmailAndPassword(
+                                email: email.text,
+                                password: password.text,
+                              );
+                              if (credentials.user != null && context.mounted) {
+                                Navigator.of(context).pushAndRemoveUntil(
+                                  MaterialPageRoute(
+                                    builder: (context) => const HomePage(),
+                                  ),
+                                  (_) => false,
                                 );
-                                if (credentials.user != null &&
-                                    context.mounted) {
-                                  Navigator.of(context).pushAndRemoveUntil(
-                                    MaterialPageRoute(
-                                      builder: (context) => const HomePage(),
-                                    ),
-                                    (_) => false,
-                                  );
-                                }
-                              } on FirebaseAuthException catch (e) {
-                                switch (e.code) {
-                                  case 'email-already-in-use':
-                                    emailError.value =
-                                        'Email address is already taken';
-                                    break;
-                                  case 'invalid-email':
-                                    emailError.value =
-                                        'Please enter a valid email';
-                                    break;
-                                  case 'weak-password':
-                                    passwordError.value =
-                                        'Password is too weak';
-                                    break;
-                                  default:
-                                    rethrow;
-                                }
-                              } finally {
-                                isLoading.value = false;
                               }
-                            },
-                          ),
+                            } on FirebaseAuthException catch (e) {
+                              switch (e.code) {
+                                case 'email-already-in-use':
+                                  emailError.value =
+                                      'Email address is already taken';
+                                  break;
+                                case 'invalid-email':
+                                  emailError.value =
+                                      'Please enter a valid email';
+                                  break;
+                                case 'weak-password':
+                                  passwordError.value = 'Password is too weak';
+                                  break;
+                                default:
+                                  rethrow;
+                              }
+                            }
+                          },
+                        ),
                         if (Platform.isAndroid)
                           Column(
                             children: [
