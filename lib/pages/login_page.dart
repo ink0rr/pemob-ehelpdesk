@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:ehelpdesk/pages/register_page.dart';
 import 'package:ehelpdesk/widgets/async_button.dart';
 import 'package:ehelpdesk/widgets/labeled_checkbox.dart';
@@ -8,7 +6,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'home_page.dart';
@@ -163,63 +160,6 @@ class LoginPage extends HookConsumerWidget {
                             }
                           },
                         ),
-                        if (Platform.isAndroid)
-                          Column(
-                            children: [
-                              const SizedBox(height: 24),
-                              const Row(
-                                children: [
-                                  Expanded(
-                                    child: Divider(
-                                      endIndent: 12,
-                                      thickness: 2,
-                                    ),
-                                  ),
-                                  Text('or continue with'),
-                                  Expanded(
-                                    child: Divider(
-                                      indent: 12,
-                                      thickness: 2,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 24),
-                              Ink(
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Colors.grey,
-                                    width: 0.5,
-                                  ),
-                                  borderRadius: BorderRadius.circular(6),
-                                ),
-                                child: InkWell(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(16),
-                                    child: SvgPicture.asset(
-                                        'assets/icons/google.svg'),
-                                  ),
-                                  onTap: () async {
-                                    final credentials = await FirebaseAuth
-                                        .instance
-                                        .signInWithProvider(
-                                            GoogleAuthProvider());
-
-                                    if (credentials.user != null &&
-                                        context.mounted) {
-                                      Navigator.of(context).pushAndRemoveUntil(
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              const HomePage(),
-                                        ),
-                                        (_) => false,
-                                      );
-                                    }
-                                  },
-                                ),
-                              )
-                            ],
-                          ),
                         const SizedBox(height: 24),
                         Expanded(
                           child: Row(
