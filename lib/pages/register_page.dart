@@ -17,6 +17,7 @@ class RegisterPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final form = useMemoized(() => GlobalKey<FormState>(), []);
     final username = useTextEditingController();
     final email = useTextEditingController();
     final password = useTextEditingController();
@@ -39,6 +40,7 @@ class RegisterPage extends HookConsumerWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(24.0),
                   child: Form(
+                    key: form,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -164,6 +166,8 @@ class RegisterPage extends HookConsumerWidget {
                           child: const Text('Register'),
                           onPressed: () async {
                             try {
+                              if (form.currentState?.validate() != true) return;
+
                               final user = await FirebaseAuth.instance
                                   .createUserWithEmailAndPassword(
                                     email: email.text,

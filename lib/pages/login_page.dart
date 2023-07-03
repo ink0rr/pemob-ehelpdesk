@@ -18,6 +18,7 @@ class LoginPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final form = useMemoized(() => GlobalKey<FormState>(), []);
     final email = useTextEditingController();
     final password = useTextEditingController();
     final loginError = useState('');
@@ -37,6 +38,7 @@ class LoginPage extends HookConsumerWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(24.0),
                   child: Form(
+                    key: form,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -128,12 +130,19 @@ class LoginPage extends HookConsumerWidget {
                           child: const Text('Login'),
                           onPressed: () async {
                             try {
-                              final credentials = await FirebaseAuth.instance
+                              if (form.currentState?.validate() != true) return;
+
+                              final user = await FirebaseAuth.instance
                                   .signInWithEmailAndPassword(
-                                email: email.text,
-                                password: password.text,
-                              );
-                              if (credentials.user != null && context.mounted) {
+                                    email: email.text,
+                                    password: password.text,
+                                  )
+                                  .then((c) => c.user);
+                              if (user == null) {
+                                throw FirebaseAuthException(
+                                    code: 'user-not-found');
+                              }
+                              if (context.mounted) {
                                 Navigator.of(context).pushAndRemoveUntil(
                                   MaterialPageRoute(
                                     builder: (context) => const HomePage(),
