@@ -13,8 +13,10 @@ class HomePage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser!;
-
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      throw Exception('User not logged in');
+    }
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 0,
@@ -94,7 +96,9 @@ class HomePage extends HookWidget {
                               child: InkWell(
                                 onTap: () {
                                   Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => const ChatPage(),
+                                    builder: (context) => ChatPage(
+                                      questionId: e.id,
+                                    ),
                                   ));
                                 },
                                 child: Padding(
