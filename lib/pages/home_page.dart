@@ -15,7 +15,7 @@ class HomePage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.read(userProvider);
+    final user = ref.watch(userProvider);
     final questions = db.collection('questions');
     if (user == null) {
       return const NotSignedInPage();
