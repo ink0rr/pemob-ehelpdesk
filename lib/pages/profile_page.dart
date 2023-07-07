@@ -5,14 +5,17 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../constants.dart';
 import '../providers/user.dart';
 import 'login_page.dart';
+import 'not_signed_in.dart';
 
 class ProfilePage extends HookConsumerWidget {
   const ProfilePage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(userProvider)!;
-
+    final user = ref.read(userProvider);
+    if (user == null) {
+      return const NotSignedInPage();
+    }
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile'),

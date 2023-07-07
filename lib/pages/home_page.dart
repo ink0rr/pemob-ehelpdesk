@@ -7,6 +7,7 @@ import '../models/question.dart';
 import '../providers/user.dart';
 import 'ask_question_page.dart';
 import 'chat_page.dart';
+import 'not_signed_in.dart';
 import 'profile_page.dart';
 
 class HomePage extends HookConsumerWidget {
@@ -14,9 +15,11 @@ class HomePage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(userProvider)!;
+    final user = ref.read(userProvider);
     final questions = db.collection('questions');
-
+    if (user == null) {
+      return const NotSignedInPage();
+    }
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 0,
