@@ -1,4 +1,3 @@
-import 'package:chat_bubbles/chat_bubbles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
@@ -16,50 +15,104 @@ class ChatPage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final input = useTextEditingController();
+    final isEmpty = useState(true);
+    final scroll = useScrollController();
+
     final messages = db.collection('questions/$questionId/messages');
+
+    useEffect(() {
+      input.addListener(() {
+        isEmpty.value = input.text.trim() == '';
+      });
+      return null;
+    }, []);
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Admin Helpdesk'),
+        elevation: 2,
+        backgroundColor: Colors.white,
+        shadowColor: Colors.grey[100],
+        actions: [
+          IconButton(
+            onPressed: () {
+              // ...
+            },
+            icon: const Icon(Icons.thumb_up_outlined),
+          ),
+          IconButton(
+            onPressed: () {
+              // ...
+            },
+            icon: const Icon(Icons.thumb_down_outlined),
+          ),
+        ],
       ),
       body: SafeArea(
-        child: Stack(
+        child: Column(
           children: [
-            StreamBuilder(
-              stream: messages.orderBy('createdAt').snapshots(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
+            Expanded(
+              child: StreamBuilder(
+                stream: messages.orderBy('createdAt').snapshots(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  scroll.animateTo(
+                    0,
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeOut,
                   );
-                }
-
-                return ListView(
-                  children: [
-                    const SizedBox(height: 24),
-                    ...snapshot.data!.docs.map((doc) {
-                      final message = Message.fromJson(doc.data());
-                      return ChatBubble(
-                        message: message.message,
-                        isSender: message.authorId == auth.currentUser!.uid,
-                      );
-                    })
-                  ],
-                );
-              },
+                  return ListView(
+                    controller: scroll,
+                    reverse: true,
+                    children: [
+                      const SizedBox(height: 24),
+                      ...snapshot.data!.docs.reversed.map((doc) {
+                        final message = Message.fromJson(doc.data());
+                        return ChatBubble(
+                          message: message.message,
+                          isSender: message.authorId == auth.currentUser!.uid,
+                        );
+                      })
+                    ],
+                  );
+                },
+              ),
             ),
-            MessageBar(
-              onSend: (message) async {
-                if (message.isEmpty) {
-                  return;
-                }
-                await messages.add(Message(
-                  message: message,
-                  authorId: auth.currentUser!.uid,
-                  createdAt: DateTime.now(),
-                ).toJson());
-              },
-              sendButtonColor: Theme.of(context).primaryColor,
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: TextField(
+                controller: input,
+                decoration: InputDecoration(
+                  hintText: 'Type a message',
+                  filled: true,
+                  suffixIcon: IconButton(
+                    onPressed: isEmpty.value
+                        ? null
+                        : () async {
+                            await messages.add(Message(
+                              message: input.text.trim(),
+                              authorId: auth.currentUser!.uid,
+                              createdAt: DateTime.now(),
+                            ).toJson());
+                            input.clear();
+                          },
+                    icon: Icon(
+                      Icons.send,
+                      color: isEmpty.value ? Colors.grey : Theme.of(context).primaryColor,
+                    ),
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(24),
+                    borderSide: BorderSide.none,
+                  ),
+                  contentPadding: const EdgeInsets.all(16),
+                ),
+              ),
             ),
           ],
         ),

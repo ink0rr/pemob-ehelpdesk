@@ -1,4 +1,3 @@
-import 'package:chat_bubbles/chat_bubbles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
@@ -15,21 +14,65 @@ class ChatBubble extends HookWidget {
   @override
   Widget build(BuildContext context) {
     if (isSender == true) {
-      return BubbleSpecialThree(
-        text: message,
-        tail: true,
-        color: Theme.of(context).primaryColor,
-        textStyle: const TextStyle(
-          color: Colors.white,
-          fontSize: 16,
+      return Container(
+        alignment: Alignment.centerRight,
+        margin: const EdgeInsetsDirectional.only(
+          start: 64,
+          end: 16,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(4),
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              color: Theme.of(context).primaryColor,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
+                bottomLeft: Radius.circular(20),
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Text(
+                message,
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
         ),
       );
     }
-    return BubbleSpecialThree(
-      text: message,
-      tail: true,
-      isSender: false,
-      color: const Color(0xFFE8E8EE),
+    return Container(
+      alignment: Alignment.centerLeft,
+      margin: const EdgeInsetsDirectional.only(
+        start: 16,
+        end: 64,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(4),
+        child: DecoratedBox(
+          decoration: const BoxDecoration(
+            color: Color(0xFFE8E8EE),
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
+              bottomRight: Radius.circular(20),
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Text(
+              message,
+              style: const TextStyle(
+                fontSize: 16,
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
