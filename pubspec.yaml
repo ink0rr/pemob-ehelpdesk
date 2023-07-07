@@ -19,11 +19,14 @@ dependencies:
   email_validator: ^2.1.17
   chat_bubbles: ^1.4.1
   cloud_firestore: ^4.8.2
+  json_annotation: ^4.8.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
+  build_runner: ^2.4.6
+  json_serializable: ^6.7.1
 
 flutter:
   uses-material-design: true

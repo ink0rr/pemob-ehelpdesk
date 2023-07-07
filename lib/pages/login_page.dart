@@ -1,6 +1,3 @@
-import 'package:ehelpdesk/pages/register_page.dart';
-import 'package:ehelpdesk/widgets/async_button.dart';
-import 'package:ehelpdesk/widgets/labeled_checkbox.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
@@ -8,7 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../widgets/async_button.dart';
+import '../widgets/labeled_checkbox.dart';
 import 'home_page.dart';
+import 'register_page.dart';
 
 class LoginPage extends HookConsumerWidget {
   const LoginPage({super.key});
@@ -44,9 +44,10 @@ class LoginPage extends HookConsumerWidget {
                         const Text(
                           'Login',
                           style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 0.72),
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 0.72,
+                          ),
                         ),
                         const SizedBox(height: 32),
                         TextFormField(
@@ -78,9 +79,7 @@ class LoginPage extends HookConsumerWidget {
                             suffixIconColor: Colors.grey,
                             suffixIcon: IconButton(
                               icon: Icon(
-                                hidePassword.value
-                                    ? Icons.visibility
-                                    : Icons.visibility_off,
+                                hidePassword.value ? Icons.visibility : Icons.visibility_off,
                               ),
                               onPressed: () {
                                 hidePassword.value = !hidePassword.value;
@@ -136,8 +135,7 @@ class LoginPage extends HookConsumerWidget {
                                   )
                                   .then((c) => c.user);
                               if (user == null) {
-                                throw FirebaseAuthException(
-                                    code: 'user-not-found');
+                                throw FirebaseAuthException(code: 'user-not-found');
                               }
                               if (context.mounted) {
                                 Navigator.of(context).pushAndRemoveUntil(
@@ -151,8 +149,7 @@ class LoginPage extends HookConsumerWidget {
                               switch (e.code) {
                                 case 'user-not-found':
                                 case 'wrong-password':
-                                  loginError.value =
-                                      'Incorrect email or password';
+                                  loginError.value = 'Incorrect email or password';
                                   break;
                                 default:
                                   rethrow;
@@ -181,8 +178,7 @@ class LoginPage extends HookConsumerWidget {
                                         ..onTap = () {
                                           Navigator.of(context).push(
                                             MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const RegisterPage(),
+                                              builder: (context) => const RegisterPage(),
                                             ),
                                           );
                                         },

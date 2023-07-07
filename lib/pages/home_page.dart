@@ -1,23 +1,22 @@
-import 'package:ehelpdesk/models/question.dart';
-import 'package:ehelpdesk/models/user_data.dart';
-import 'package:ehelpdesk/pages/chat_page.dart';
-import 'package:ehelpdesk/pages/profile_page.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../constants.dart';
+import '../models/question.dart';
+import '../providers/user.dart';
 import 'ask_question_page.dart';
+import 'chat_page.dart';
+import 'profile_page.dart';
 
-class HomePage extends HookWidget {
+class HomePage extends HookConsumerWidget {
   const HomePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user == null) {
-      throw Exception('User not logged in');
-    }
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(userProvider)!;
+    final questions = db.collection('questions');
+
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 0,
@@ -46,55 +45,39 @@ class HomePage extends HookWidget {
                       ),
                     ),
                     const SizedBox(width: 16),
-                    FutureBuilder(
-                      future: UserData.getCurrentUser(),
-                      builder: (context, snapshot) {
-                        final user = snapshot.data;
-                        if (user == null) {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        }
-                        return InkWell(
-                          child: CircleAvatar(
-                            radius: 24,
-                            child: ClipOval(
-                              child: Image.network(
-                                user.avatarUrl,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
+                    InkWell(
+                      child: CircleAvatar(
+                        radius: 24,
+                        child: ClipOval(
+                          child: Image.network(
+                            user.photoURL ?? '',
+                            fit: BoxFit.cover,
                           ),
-                          onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => const ProfilePage(),
-                            ));
-                          },
-                        );
+                        ),
+                      ),
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const ProfilePage(),
+                        ));
                       },
                     ),
                   ],
                 ),
                 const SizedBox(height: 24),
                 StreamBuilder(
-                  stream: Question.getSnapshots(),
+                  stream: questions.where('authorId', isEqualTo: user.uid).snapshots(),
                   builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
+                    if (!snapshot.hasData) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
                     }
-                    final data = snapshot.data?.docs;
-                    if (data == null || data.isEmpty) {
-                      return const Center(child: Text('No data'));
-                    }
-                    final questions = data
-                        .map((e) => Question.fromSnapshot(e))
-                        .where((element) => element.authorId == user.uid)
-                        .toList();
 
                     return Column(
                       children: [
-                        ...questions.map(
-                          (e) => Padding(
+                        ...snapshot.data!.docs.map((doc) {
+                          final question = Question.fromJson(doc.data());
+                          return Padding(
                             padding: const EdgeInsets.only(bottom: 16),
                             child: Card(
                               elevation: 2,
@@ -106,15 +89,14 @@ class HomePage extends HookWidget {
                                 onTap: () {
                                   Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) => ChatPage(
-                                      questionId: e.id,
+                                      questionId: doc.id,
                                     ),
                                   ));
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.all(24),
                                   child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       SvgPicture.asset(
                                         'assets/icons/question.svg',
@@ -122,25 +104,24 @@ class HomePage extends HookWidget {
                                       const SizedBox(width: 14),
                                       Flexible(
                                         child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              e.category,
+                                              question.category,
                                               style: const TextStyle(
                                                 fontSize: 12,
                                               ),
                                             ),
                                             const SizedBox(height: 8),
                                             Text(
-                                              e.title,
+                                              question.title,
                                               style: const TextStyle(
                                                 fontSize: 18,
                                                 fontWeight: FontWeight.bold,
                                               ),
                                             ),
                                             const SizedBox(height: 8),
-                                            Text(e.description),
+                                            Text(question.description),
                                           ],
                                         ),
                                       )
@@ -149,8 +130,8 @@ class HomePage extends HookWidget {
                                 ),
                               ),
                             ),
-                          ),
-                        )
+                          );
+                        })
                       ],
                     );
                   },

@@ -1,5 +1,3 @@
-import 'package:ehelpdesk/models/user_data.dart';
-import 'package:ehelpdesk/widgets/async_button.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
@@ -7,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../constants.dart';
+import '../widgets/async_button.dart';
 import 'home_page.dart';
 
 class RegisterPage extends HookConsumerWidget {
@@ -46,9 +46,10 @@ class RegisterPage extends HookConsumerWidget {
                         const Text(
                           'Register',
                           style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 0.72),
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 0.72,
+                          ),
                         ),
                         const SizedBox(height: 32),
                         TextFormField(
@@ -97,9 +98,7 @@ class RegisterPage extends HookConsumerWidget {
                             suffixIconColor: Colors.grey,
                             suffixIcon: IconButton(
                               icon: Icon(
-                                hidePassword.value
-                                    ? Icons.visibility
-                                    : Icons.visibility_off,
+                                hidePassword.value ? Icons.visibility : Icons.visibility_off,
                               ),
                               onPressed: () {
                                 hidePassword.value = !hidePassword.value;
@@ -132,13 +131,10 @@ class RegisterPage extends HookConsumerWidget {
                             suffixIconColor: Colors.grey,
                             suffixIcon: IconButton(
                               icon: Icon(
-                                hideConfirmPassword.value
-                                    ? Icons.visibility
-                                    : Icons.visibility_off,
+                                hideConfirmPassword.value ? Icons.visibility : Icons.visibility_off,
                               ),
                               onPressed: () {
-                                hideConfirmPassword.value =
-                                    !hideConfirmPassword.value;
+                                hideConfirmPassword.value = !hideConfirmPassword.value;
                               },
                             ),
                           ),
@@ -165,18 +161,15 @@ class RegisterPage extends HookConsumerWidget {
                             try {
                               if (form.currentState?.validate() != true) return;
 
-                              final user = await FirebaseAuth.instance
-                                  .createUserWithEmailAndPassword(
-                                    email: email.text,
-                                    password: password.text,
-                                  )
+                              final user = await auth
+                                  .createUserWithEmailAndPassword(email: email.text, password: password.text)
                                   .then((c) => c.user);
                               if (user == null) {
                                 throw Exception('Failed to register user');
                               }
-                              await UserData.register(
-                                id: user.uid,
-                                username: username.text,
+                              await user.updateDisplayName(username.text);
+                              await user.updatePhotoURL(
+                                'https://ui-avatars.com/api/?background=random&name=${username.text.split(' ').join('+')}&size=128&format=png',
                               );
                               if (context.mounted) {
                                 Navigator.of(context).pushAndRemoveUntil(
@@ -189,12 +182,10 @@ class RegisterPage extends HookConsumerWidget {
                             } on FirebaseAuthException catch (e) {
                               switch (e.code) {
                                 case 'email-already-in-use':
-                                  emailError.value =
-                                      'Email address is already taken';
+                                  emailError.value = 'Email address is already taken';
                                   break;
                                 case 'invalid-email':
-                                  emailError.value =
-                                      'Please enter a valid email';
+                                  emailError.value = 'Please enter a valid email';
                                   break;
                                 case 'weak-password':
                                   passwordError.value = 'Password is too weak';
