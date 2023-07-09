@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 import '../constants.dart';
-import '../models/question.dart';
+import '../models/ticket.dart';
 import '../widgets/async_button.dart';
 
 class AskQuestionPage extends HookWidget {
@@ -23,7 +23,7 @@ class AskQuestionPage extends HookWidget {
     final title = useTextEditingController();
     final description = useTextEditingController();
 
-    final questions = db.collection('questions');
+    final tickets = db.collection('tickets');
 
     return Scaffold(
       appBar: AppBar(
@@ -90,7 +90,7 @@ class AskQuestionPage extends HookWidget {
                     onPressed: () async {
                       if (form.currentState?.validate() != true) return;
 
-                      await questions.add(Question(
+                      await tickets.add(Ticket(
                         category: category.value!,
                         title: title.text,
                         description: description.text,

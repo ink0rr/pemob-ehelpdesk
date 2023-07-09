@@ -8,12 +8,12 @@ part 'message.g.dart';
 @JsonSerializable()
 class Message {
   const Message({
-    required this.message,
+    required this.text,
     required this.authorId,
     required this.createdAt,
   });
 
-  final String message;
+  final String text;
   final String authorId;
   @TimestampConverter()
   final DateTime createdAt;

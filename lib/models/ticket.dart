@@ -3,11 +3,11 @@ import 'package:json_annotation/json_annotation.dart';
 
 import '../converters/timestamp.dart';
 
-part 'question.g.dart';
+part 'ticket.g.dart';
 
 @JsonSerializable()
-class Question {
-  const Question({
+class Ticket {
+  const Ticket({
     required this.category,
     required this.title,
     required this.description,
@@ -22,7 +22,7 @@ class Question {
   @TimestampConverter()
   final DateTime createdAt;
 
-  factory Question.fromJson(Map<String, Object?> json) => _$QuestionFromJson(json);
+  factory Ticket.fromJson(Map<String, Object?> json) => _$TicketFromJson(json);
 
-  Map<String, Object?> toJson() => _$QuestionToJson(this);
+  Map<String, Object?> toJson() => _$TicketToJson(this);
 }

@@ -3,7 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../constants.dart';
-import '../models/question.dart';
+import '../models/ticket.dart';
 import '../providers/user.dart';
 import 'ask_question_page.dart';
 import 'chat_page.dart';
@@ -16,7 +16,7 @@ class HomePage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userProvider);
-    final questions = db.collection('questions');
+    final tickets = db.collection('tickets');
     if (user == null) {
       return const NotSignedInPage();
     }
@@ -37,7 +37,8 @@ class HomePage extends HookConsumerWidget {
                     const Flexible(
                       child: TextField(
                         decoration: InputDecoration(
-                          labelText: 'Search',
+                          hintText: 'Search',
+                          filled: true,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.all(
                               Radius.circular(24),
@@ -68,7 +69,7 @@ class HomePage extends HookConsumerWidget {
                 ),
                 const SizedBox(height: 24),
                 StreamBuilder(
-                  stream: questions.where('authorId', isEqualTo: user.uid).snapshots(),
+                  stream: tickets.where('authorId', isEqualTo: user.uid).snapshots(),
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) {
                       return const Center(
@@ -79,7 +80,7 @@ class HomePage extends HookConsumerWidget {
                     return Column(
                       children: [
                         ...snapshot.data!.docs.map((doc) {
-                          final question = Question.fromJson(doc.data());
+                          final ticket = Ticket.fromJson(doc.data());
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 16),
                             child: Card(
@@ -92,7 +93,7 @@ class HomePage extends HookConsumerWidget {
                                 onTap: () {
                                   Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) => ChatPage(
-                                      questionId: doc.id,
+                                      ticketId: doc.id,
                                     ),
                                   ));
                                 },
@@ -110,21 +111,21 @@ class HomePage extends HookConsumerWidget {
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              question.category,
+                                              ticket.category,
                                               style: const TextStyle(
                                                 fontSize: 12,
                                               ),
                                             ),
                                             const SizedBox(height: 8),
                                             Text(
-                                              question.title,
+                                              ticket.title,
                                               style: const TextStyle(
                                                 fontSize: 18,
                                                 fontWeight: FontWeight.bold,
                                               ),
                                             ),
                                             const SizedBox(height: 8),
-                                            Text(question.description),
+                                            Text(ticket.description),
                                           ],
                                         ),
                                       )

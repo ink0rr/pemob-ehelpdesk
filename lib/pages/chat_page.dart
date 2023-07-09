@@ -8,10 +8,10 @@ import '../widgets/chat_bubble.dart';
 class ChatPage extends HookWidget {
   const ChatPage({
     super.key,
-    required this.questionId,
+    required this.ticketId,
   });
 
-  final String questionId;
+  final String ticketId;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class ChatPage extends HookWidget {
     final isEmpty = useState(true);
     final scroll = useScrollController();
 
-    final messages = db.collection('questions/$questionId/messages');
+    final messages = db.collection('tickets/$ticketId/messages');
 
     useEffect(() {
       input.addListener(() {
@@ -74,7 +74,7 @@ class ChatPage extends HookWidget {
                       ...snapshot.data!.docs.reversed.map((doc) {
                         final message = Message.fromJson(doc.data());
                         return ChatBubble(
-                          message: message.message,
+                          message: message.text,
                           isSender: message.authorId == auth.currentUser!.uid,
                         );
                       })
@@ -95,7 +95,7 @@ class ChatPage extends HookWidget {
                         ? null
                         : () async {
                             await messages.add(Message(
-                              message: input.text.trim(),
+                              text: input.text.trim(),
                               authorId: auth.currentUser!.uid,
                               createdAt: DateTime.now(),
                             ).toJson());
