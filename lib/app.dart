@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'constants.dart';
-import 'pages/home_page.dart';
+import 'pages/home/home_page.dart';
 import 'pages/login_page.dart';
 import 'providers/user.dart';
 import 'theme.dart';
@@ -12,9 +13,12 @@ class App extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    auth.authStateChanges().listen((user) {
-      ref.read(userProvider.notifier).state = user;
-    });
+    useEffect(() {
+      final sub = auth.authStateChanges().listen((user) {
+        ref.read(userProvider.notifier).state = user;
+      });
+      return sub.cancel;
+    }, []);
     return MaterialApp(
       title: 'Flutter Demo',
       theme: AppTheme.themeData,

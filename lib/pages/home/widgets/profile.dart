@@ -1,22 +1,19 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
-import '../constants.dart';
-import '../providers/user.dart';
-import '../theme.dart';
-import 'login_page.dart';
-import 'not_signed_in.dart';
+import '../../../constants.dart';
+import '../../../theme.dart';
+import '../../login_page.dart';
 
-class ProfilePage extends HookConsumerWidget {
-  const ProfilePage({super.key});
+class Profile extends HookWidget {
+  const Profile({super.key, required this.user});
+
+  final User user;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(userProvider);
-    if (user == null) {
-      return const NotSignedInPage();
-    }
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile'),
@@ -27,7 +24,7 @@ class ProfilePage extends HookConsumerWidget {
         titleTextStyle: const TextStyle(
           color: Colors.white,
           fontSize: 20,
-          fontWeight: FontWeight.w700,
+          fontWeight: FontWeight.w800,
         ),
         iconTheme: const IconThemeData(
           color: Colors.white,
@@ -88,7 +85,7 @@ class ProfilePage extends HookConsumerWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(24.0),
+                padding: const EdgeInsets.all(24),
                 child: Column(
                   children: [
                     const SizedBox(height: 48),

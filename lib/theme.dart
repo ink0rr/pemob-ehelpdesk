@@ -14,7 +14,7 @@ abstract final class AppTheme {
       titleTextStyle: TextStyle(
         color: Colors.black,
         fontSize: 20,
-        fontWeight: FontWeight.bold,
+        fontWeight: FontWeight.w800,
       ),
       backgroundColor: Colors.transparent,
       shadowColor: Colors.transparent,

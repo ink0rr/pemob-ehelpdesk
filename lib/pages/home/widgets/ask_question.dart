@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
-import '../constants.dart';
-import '../models/ticket.dart';
-import '../widgets/async_button.dart';
+import '../../../constants.dart';
+import '../../../models/ticket.dart';
+import '../../../widgets/async_button.dart';
 
-class AskQuestionPage extends HookWidget {
-  const AskQuestionPage({super.key});
+class AskQuestion extends HookWidget {
+  const AskQuestion({super.key});
 
   final List<String> categories = const [
     'Materi Perkuliahan',
@@ -32,7 +32,7 @@ class AskQuestionPage extends HookWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(24.0),
+            padding: const EdgeInsets.all(24),
             child: Form(
               key: form,
               autovalidateMode: AutovalidateMode.onUserInteraction,

@@ -9,7 +9,7 @@ import '../constants.dart';
 import '../theme.dart';
 import '../widgets/async_button.dart';
 import '../widgets/intrinsic_layout.dart';
-import 'home_page.dart';
+import 'home/home_page.dart';
 
 class RegisterPage extends HookConsumerWidget {
   const RegisterPage({super.key});
@@ -33,7 +33,7 @@ class RegisterPage extends HookConsumerWidget {
       body: SafeArea(
         child: IntrinsicLayout(
           child: Padding(
-            padding: const EdgeInsets.all(24.0),
+            padding: const EdgeInsets.all(24),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

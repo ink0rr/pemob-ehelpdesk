@@ -10,7 +10,7 @@ import '../theme.dart';
 import '../widgets/async_button.dart';
 import '../widgets/intrinsic_layout.dart';
 import '../widgets/labeled_checkbox.dart';
-import 'home_page.dart';
+import 'home/home_page.dart';
 import 'register_page.dart';
 
 class LoginPage extends HookConsumerWidget {
@@ -32,7 +32,7 @@ class LoginPage extends HookConsumerWidget {
       body: SafeArea(
         child: IntrinsicLayout(
           child: Padding(
-            padding: const EdgeInsets.all(24.0),
+            padding: const EdgeInsets.all(24),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
