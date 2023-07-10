@@ -87,7 +87,10 @@ class AskQuestion extends HookConsumerWidget {
                   const SizedBox(height: 24),
                   TextFormField(
                     controller: description,
+                    keyboardType: TextInputType.multiline,
+                    maxLines: 5,
                     decoration: const InputDecoration(
+                      alignLabelWithHint: true,
                       labelText: 'Deskripsi',
                     ),
                     validator: (value) {
