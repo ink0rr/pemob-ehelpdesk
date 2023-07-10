@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 
 import '../constants.dart';
 import '../models/message.dart';
+import '../theme.dart';
 import '../widgets/chat_bubble.dart';
 
 class ChatPage extends HookWidget {
@@ -16,17 +17,19 @@ class ChatPage extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final input = useTextEditingController();
-    final isEmpty = useState(true);
+    final isEmpty = useListenableSelector(input, () => input.text.trim().isEmpty);
     final scroll = useScrollController();
 
     final messages = db.collection('tickets/$ticketId/messages');
+    final messageStream = useStream(messages.orderBy('createdAt').snapshots());
 
-    useEffect(() {
-      input.addListener(() {
-        isEmpty.value = input.text.trim() == '';
-      });
-      return null;
-    }, []);
+    useValueChanged(messageStream.data?.size, (_, __) {
+      return scroll.animateTo(
+        0,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    });
 
     return Scaffold(
       appBar: AppBar(
@@ -49,34 +52,21 @@ class ChatPage extends HookWidget {
         child: Column(
           children: [
             Expanded(
-              child: StreamBuilder(
-                stream: messages.orderBy('createdAt').snapshots(),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
-                  scroll.animateTo(
-                    0,
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeOut,
-                  );
-                  return ListView(
-                    controller: scroll,
-                    reverse: true,
-                    children: [
-                      const SizedBox(height: 24),
-                      ...snapshot.data!.docs.reversed.map((doc) {
-                        final message = Message.fromJson(doc.data());
-                        return ChatBubble(
-                          message: message.text,
-                          isSender: message.authorId == auth.currentUser!.uid,
-                        );
-                      })
-                    ],
-                  );
-                },
+              child: ListView(
+                controller: scroll,
+                reverse: true,
+                children: [
+                  const SizedBox(height: 24),
+                  ...?messageStream.data?.docs.reversed.map(
+                    (doc) {
+                      final message = Message.fromJson(doc.data());
+                      return ChatBubble(
+                        message: message.text,
+                        isSender: message.authorId == auth.currentUser!.uid,
+                      );
+                    },
+                  )
+                ],
               ),
             ),
             Padding(
@@ -87,7 +77,7 @@ class ChatPage extends HookWidget {
                   hintText: 'Type a message',
                   filled: true,
                   suffixIcon: IconButton(
-                    onPressed: isEmpty.value
+                    onPressed: isEmpty
                         ? null
                         : () async {
                             await messages.add(Message(
@@ -99,7 +89,7 @@ class ChatPage extends HookWidget {
                           },
                     icon: Icon(
                       Icons.send,
-                      color: isEmpty.value ? Colors.grey : Theme.of(context).primaryColor,
+                      color: isEmpty ? Colors.grey : AppTheme.primaryColor,
                     ),
                   ),
                   border: OutlineInputBorder(
