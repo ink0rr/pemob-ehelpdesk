@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../constants.dart';
 import '../models/answer.dart';
+import '../providers/user.dart';
 import '../theme.dart';
 
 class QuestionPage extends HookWidget {
@@ -40,10 +42,10 @@ class QuestionPage extends HookWidget {
                           child: CircularProgressIndicator(),
                         );
                       }
-                      final questionRef = snapshot.data!.reference;
-                      final question = snapshot.data!.data()!;
+                      final question = snapshot.data!.reference;
+                      final q = snapshot.data!.data()!;
                       return FutureBuilder(
-                        future: getUserData(question.authorId),
+                        future: getUserData(q.authorId),
                         builder: (context, snapshot) {
                           if (!snapshot.hasData) {
                             return const Center(
@@ -54,105 +56,25 @@ class QuestionPage extends HookWidget {
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Row(
-                                children: [
-                                  CircleAvatar(
-                                    radius: 24,
-                                    child: ClipOval(
-                                      child: Image.network(
-                                        author.photoURL,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        author.username,
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                      Text(
-                                        'Just now',
-                                        style: TextStyle(
-                                          color: Colors.grey.shade600,
-                                          fontSize: 14,
-                                        ),
-                                      )
-                                    ],
-                                  )
-                                ],
+                              _HeadingWidget(
+                                username: author.username,
+                                photoURL: author.photoURL,
                               ),
                               const SizedBox(height: 16),
                               Text(
-                                question.title,
+                                q.title,
                                 style: const TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
                               const SizedBox(height: 8),
-                              Text(question.description),
+                              Text(q.description),
                               const SizedBox(height: 32),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  InkWell(
-                                    borderRadius: BorderRadius.circular(64),
-                                    onTap: () {
-                                      if (question.votes[auth.currentUser!.uid] == 1) {
-                                        questionRef.update({'votes.${auth.currentUser!.uid}': FieldValue.delete()});
-                                      } else {
-                                        questionRef.update({'votes.${auth.currentUser!.uid}': 1});
-                                      }
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8),
-                                      child: Icon(
-                                        Icons.keyboard_arrow_up,
-                                        color: question.votes[auth.currentUser!.uid] == 1
-                                            ? AppTheme.primaryColor
-                                            : Colors.grey.shade600,
-                                      ),
-                                    ),
-                                  ),
-                                  Text(
-                                    question.votes.values.fold(0, (p, c) => p + c).toString(),
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                  InkWell(
-                                    borderRadius: BorderRadius.circular(64),
-                                    onTap: () {
-                                      if (question.votes[auth.currentUser!.uid] == -1) {
-                                        questionRef.update({'votes.${auth.currentUser!.uid}': FieldValue.delete()});
-                                      } else {
-                                        questionRef.update({'votes.${auth.currentUser!.uid}': -1});
-                                      }
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8),
-                                      child: Icon(
-                                        Icons.keyboard_arrow_down,
-                                        color: question.votes[auth.currentUser!.uid] == -1
-                                            ? Colors.red
-                                            : Colors.grey.shade600,
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
+                              _VoteWidget(doc: question, votes: q.votes),
                               const Divider(),
                               ...?answerSnapshots.data?.docs.map(
-                                (e) => _AnswerWiget(answer: e.data(), answerRef: e.reference),
+                                (e) => _AnswerWiget(doc: e),
                               )
                             ],
                           );
@@ -204,15 +126,14 @@ class QuestionPage extends HookWidget {
 
 class _AnswerWiget extends HookWidget {
   const _AnswerWiget({
-    required this.answer,
-    required this.answerRef,
+    required this.doc,
   });
 
-  final Answer answer;
-  final DocumentReference answerRef;
+  final QueryDocumentSnapshot<Answer> doc;
 
   @override
   Widget build(BuildContext context) {
+    final answer = doc.data();
     return FutureBuilder(
       future: getUserData(answer.authorId),
       builder: (context, snapshot) {
@@ -259,56 +180,7 @@ class _AnswerWiget extends HookWidget {
                   const SizedBox(height: 8),
                   Text(answer.text),
                   const SizedBox(height: 16),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      InkWell(
-                        borderRadius: BorderRadius.circular(64),
-                        onTap: () {
-                          if (answer.votes[auth.currentUser!.uid] == 1) {
-                            answerRef.update({'votes.${auth.currentUser!.uid}': FieldValue.delete()});
-                          } else {
-                            answerRef.update({'votes.${auth.currentUser!.uid}': 1});
-                          }
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(2),
-                          child: Icon(
-                            Icons.keyboard_arrow_up,
-                            color:
-                                answer.votes[auth.currentUser!.uid] == 1 ? AppTheme.primaryColor : Colors.grey.shade600,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 6),
-                      Text(
-                        answer.votes.values.fold(0, (p, c) => p + c).toString(),
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(width: 6),
-                      InkWell(
-                        borderRadius: BorderRadius.circular(64),
-                        onTap: () {
-                          if (answer.votes[auth.currentUser!.uid] == -1) {
-                            answerRef.update({'votes.${auth.currentUser!.uid}': FieldValue.delete()});
-                          } else {
-                            answerRef.update({'votes.${auth.currentUser!.uid}': -1});
-                          }
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(2),
-                          child: Icon(
-                            Icons.keyboard_arrow_down,
-                            color: answer.votes[auth.currentUser!.uid] == -1 ? Colors.red : Colors.grey.shade600,
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
+                  _VoteWidget(doc: doc.reference, votes: answer.votes),
                   const SizedBox(height: 16),
                   const Divider(),
                 ],
@@ -317,6 +189,117 @@ class _AnswerWiget extends HookWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class _HeadingWidget extends HookWidget {
+  const _HeadingWidget({
+    required this.username,
+    required this.photoURL,
+  });
+
+  final String username;
+  final String photoURL;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        CircleAvatar(
+          radius: 22,
+          child: ClipOval(
+            child: Image.network(
+              photoURL,
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+        const SizedBox(width: 8),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              username,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            Text(
+              'Just now',
+              style: TextStyle(
+                color: Colors.grey.shade600,
+                fontSize: 14,
+              ),
+            )
+          ],
+        )
+      ],
+    );
+  }
+}
+
+class _VoteWidget extends HookConsumerWidget {
+  const _VoteWidget({
+    required this.doc,
+    required this.votes,
+  });
+
+  final DocumentReference doc;
+  final Map<String, int> votes;
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(userProvider)!;
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        InkWell(
+          borderRadius: BorderRadius.circular(64),
+          onTap: () {
+            if (votes[user.uid] == 1) {
+              doc.update({'votes.${user.uid}': FieldValue.delete()});
+            } else {
+              doc.update({'votes.${user.uid}': 1});
+            }
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(2),
+            child: Icon(
+              Icons.keyboard_arrow_up,
+              color: votes[user.uid] == 1 ? AppTheme.primaryColor : Colors.grey.shade600,
+            ),
+          ),
+        ),
+        const SizedBox(width: 6),
+        Text(
+          votes.values.fold(0, (p, c) => p + c).toString(),
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        const SizedBox(width: 6),
+        InkWell(
+          borderRadius: BorderRadius.circular(64),
+          onTap: () {
+            if (votes[user.uid] == -1) {
+              doc.update({'votes.${user.uid}': FieldValue.delete()});
+            } else {
+              doc.update({'votes.${user.uid}': -1});
+            }
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(2),
+            child: Icon(
+              Icons.keyboard_arrow_down,
+              color: votes[user.uid] == -1 ? Colors.red : Colors.grey.shade600,
+            ),
+          ),
+        )
+      ],
     );
   }
 }
