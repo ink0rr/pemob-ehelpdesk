@@ -85,8 +85,9 @@ class RegisterPage extends HookConsumerWidget {
                       ),
                       const SizedBox(height: 24),
                       TextFormField(
-                        autofillHints: const [AutofillHints.password],
+                        autofillHints: const [AutofillHints.email],
                         controller: email,
+                        keyboardType: TextInputType.emailAddress,
                         decoration: const InputDecoration(
                           labelText: 'Email',
                         ),

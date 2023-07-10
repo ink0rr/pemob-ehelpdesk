@@ -54,6 +54,7 @@ class LoginPage extends HookConsumerWidget {
                       TextFormField(
                         autofillHints: const [AutofillHints.email],
                         controller: email,
+                        keyboardType: TextInputType.emailAddress,
                         decoration: const InputDecoration(
                           labelText: 'Email',
                         ),
