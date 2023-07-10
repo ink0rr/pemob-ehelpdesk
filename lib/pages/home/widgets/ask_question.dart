@@ -31,8 +31,6 @@ class AskQuestion extends HookConsumerWidget {
     final description = useTextEditingController();
     final type = useState<String?>(null);
 
-    final tickets = db.collection('tickets');
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Tanya Help-Desk'),
@@ -131,7 +129,7 @@ class AskQuestion extends HookConsumerWidget {
                         description: description.text,
                         authorId: auth.currentUser!.uid,
                         createdAt: DateTime.now(),
-                      ).toJson());
+                      ));
 
                       ref.read(pageProvider.notifier).state = 0;
                     },

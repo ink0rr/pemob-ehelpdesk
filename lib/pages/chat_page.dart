@@ -20,7 +20,7 @@ class ChatPage extends HookWidget {
     final isEmpty = useListenableSelector(input, () => input.text.trim().isEmpty);
     final scroll = useScrollController();
 
-    final messages = db.collection('tickets/$ticketId/messages');
+    final messages = getMessages(ticketId);
     final messageStream = useStream(messages.orderBy('createdAt').snapshots());
 
     useValueChanged(messageStream.data?.size, (_, __) {
@@ -59,7 +59,7 @@ class ChatPage extends HookWidget {
                   const SizedBox(height: 24),
                   ...?messageStream.data?.docs.reversed.map(
                     (doc) {
-                      final message = Message.fromJson(doc.data());
+                      final message = doc.data();
                       return ChatBubble(
                         message: message.text,
                         isSender: message.authorId == auth.currentUser!.uid,
@@ -84,7 +84,7 @@ class ChatPage extends HookWidget {
                               text: input.text.trim(),
                               authorId: auth.currentUser!.uid,
                               createdAt: DateTime.now(),
-                            ).toJson());
+                            ));
                             input.clear();
                           },
                     icon: Icon(

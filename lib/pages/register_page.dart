@@ -29,8 +29,6 @@ class RegisterPage extends HookConsumerWidget {
     final hidePassword = useState(true);
     final hideConfirmPassword = useState(true);
 
-    final users = useMemoized(() => db.collection('users'), []);
-
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 0,
@@ -200,7 +198,7 @@ class RegisterPage extends HookConsumerWidget {
                                       'https://ui-avatars.com/api/?background=random&name=${username.text.replaceAll(' ', '+')}&size=128&format=png',
                                   role: 'member',
                                   createdAt: DateTime.now(),
-                                ).toJson());
+                                ));
 
                             if (context.mounted) {
                               Navigator.of(context).pushAndRemoveUntil(

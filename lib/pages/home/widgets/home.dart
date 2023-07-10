@@ -4,7 +4,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../constants.dart';
-import '../../../models/ticket.dart';
 import '../../../providers/user.dart';
 import '../../chat_page.dart';
 
@@ -19,7 +18,6 @@ class Home extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userData = ref.watch(userDataProvider);
-    final tickets = db.collection('tickets');
 
     return Scaffold(
       appBar: AppBar(
@@ -85,7 +83,7 @@ class Home extends HookConsumerWidget {
                       return Column(
                         children: [
                           ...snapshot.data!.docs.map((doc) {
-                            final ticket = Ticket.fromJson(doc.data());
+                            final ticket = doc.data();
                             return Padding(
                               padding: const EdgeInsets.only(bottom: 16),
                               child: Ink(
