@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../constants.dart';
 import '../../../models/ticket.dart';
 import '../../../widgets/async_button.dart';
+import '../home_page.dart';
 
-class AskQuestion extends HookWidget {
+class AskQuestion extends HookConsumerWidget {
   const AskQuestion({super.key});
 
   final List<String> categories = const [
@@ -16,12 +18,18 @@ class AskQuestion extends HookWidget {
     'Biaya Kuliah',
   ];
 
+  final List<String> types = const [
+    'Public',
+    'Private',
+  ];
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final form = useMemoized(() => GlobalKey<FormState>(), []);
     final category = useState<String?>(null);
     final title = useTextEditingController();
     final description = useTextEditingController();
+    final type = useState<String?>(null);
 
     final tickets = db.collection('tickets');
 
@@ -42,12 +50,7 @@ class AskQuestion extends HookWidget {
                     decoration: const InputDecoration(
                       labelText: 'Kategori',
                     ),
-                    items: categories
-                        .map((e) => DropdownMenuItem(
-                              value: e,
-                              child: Text(e),
-                            ))
-                        .toList(),
+                    value: category.value,
                     onChanged: (value) {
                       category.value = value;
                     },
@@ -57,6 +60,14 @@ class AskQuestion extends HookWidget {
                       }
                       return null;
                     },
+                    items: [
+                      ...categories.map(
+                        (e) => DropdownMenuItem(
+                          value: e,
+                          child: Text(e),
+                        ),
+                      )
+                    ],
                   ),
                   const SizedBox(height: 24),
                   TextFormField(
@@ -84,6 +95,30 @@ class AskQuestion extends HookWidget {
                       return null;
                     },
                   ),
+                  const SizedBox(height: 24),
+                  DropdownButtonFormField(
+                    decoration: const InputDecoration(
+                      labelText: 'Jenis Pertanyaan',
+                    ),
+                    value: type.value,
+                    onChanged: (value) {
+                      type.value = value;
+                    },
+                    validator: (value) {
+                      if (value == null || value == '') {
+                        return 'Jenis pertanyaan tidak boleh kosong';
+                      }
+                      return null;
+                    },
+                    items: [
+                      ...types.map(
+                        (e) => DropdownMenuItem(
+                          value: e,
+                          child: Text(e),
+                        ),
+                      )
+                    ],
+                  ),
                   const SizedBox(height: 48),
                   AsyncButton(
                     child: const Text('Ajukan Pertanyaan'),
@@ -98,16 +133,18 @@ class AskQuestion extends HookWidget {
                         createdAt: DateTime.now(),
                       ).toJson());
 
-                      if (context.mounted) {
-                        Navigator.of(context).pop();
-                      }
+                      ref.read(pageProvider.notifier).state = 0;
                     },
                   ),
                   const SizedBox(height: 18),
                   OutlinedButton(
-                    child: const Text('Cancel'),
+                    child: const Text('Clear'),
                     onPressed: () {
-                      Navigator.of(context).pop();
+                      category.value = null;
+                      title.clear();
+                      description.clear();
+                      type.value = null;
+                      form.currentState?.validate();
                     },
                   ),
                 ],

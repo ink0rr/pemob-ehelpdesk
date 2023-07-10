@@ -3,12 +3,15 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../providers/user.dart';
+import '../../utils/debounce.dart';
 import '../not_signed_in.dart';
 import 'widgets/ask_question.dart';
 import 'widgets/home.dart';
 import 'widgets/notifications.dart';
 import 'widgets/profile.dart';
 import 'widgets/search.dart';
+
+final pageProvider = StateProvider((ref) => 0);
 
 class HomePage extends HookConsumerWidget {
   const HomePage({super.key});
@@ -20,26 +23,38 @@ class HomePage extends HookConsumerWidget {
       return const NotSignedInPage();
     }
 
-    final currentIndex = useState(0);
-    final pages = useMemoized(
-      () => [
-        Home(user: user),
-        const Search(),
-        const AskQuestion(),
-        Notifications(user: user),
-        Profile(user: user),
-      ],
-      [user],
-    );
+    final controller = usePageController();
+    final currentIndex = ref.watch(pageProvider);
+
+    useValueChanged(currentIndex, (_, __) {
+      return controller.animateToPage(
+        currentIndex,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.ease,
+      );
+    });
+
     return Scaffold(
-      body: pages[currentIndex.value],
+      body: PageView(
+        controller: controller,
+        onPageChanged: (value) {
+          debounce(() => ref.read(pageProvider.notifier).state = value, 100);
+        },
+        children: [
+          Home(user: user),
+          const Search(),
+          const AskQuestion(),
+          Notifications(user: user),
+          Profile(user: user),
+        ],
+      ),
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: currentIndex.value,
+        currentIndex: currentIndex,
         type: BottomNavigationBarType.fixed,
         selectedItemColor: Colors.black,
         selectedFontSize: 12,
         onTap: (value) {
-          currentIndex.value = value;
+          ref.read(pageProvider.notifier).state = value;
         },
         items: const [
           BottomNavigationBarItem(
