@@ -157,7 +157,7 @@ class AskQuestion extends HookConsumerWidget {
                             createdAt: DateTime.now(),
                           ),
                         );
-                        ref.read(pageProvider.notifier).state = 0;
+                        ref.read(pageProvider.notifier).state = 1;
                         page = ChatPage(ticketId: docRef.id);
                       }
                       if (context.mounted) {

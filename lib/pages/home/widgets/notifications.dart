@@ -23,6 +23,7 @@ class Notifications extends HookConsumerWidget {
       body: SafeArea(
         child: TabBar(
           controller: controller,
+          indicatorPadding: const EdgeInsets.symmetric(horizontal: 20),
           tabs: const [
             Tab(
               child: Text(

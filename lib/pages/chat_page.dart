@@ -33,7 +33,13 @@ class ChatPage extends HookWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Admin Helpdesk'),
+        title: const Text(
+          'Admin Helpdesk',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         elevation: 2,
         backgroundColor: Colors.white,
         shadowColor: Colors.grey[100],
