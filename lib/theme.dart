@@ -19,6 +19,10 @@ abstract final class AppTheme {
       backgroundColor: Colors.transparent,
       shadowColor: Colors.transparent,
     ),
+    dividerTheme: DividerThemeData(
+      thickness: 1,
+      color: Colors.grey.shade300,
+    ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: AppTheme.primaryColor,

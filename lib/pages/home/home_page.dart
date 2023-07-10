@@ -9,7 +9,7 @@ import 'widgets/ask_question.dart';
 import 'widgets/home.dart';
 import 'widgets/notifications.dart';
 import 'widgets/profile.dart';
-import 'widgets/search.dart';
+import 'widgets/tickets.dart';
 
 final pageProvider = StateProvider((ref) => 0);
 
@@ -42,7 +42,7 @@ class HomePage extends HookConsumerWidget {
         },
         children: [
           Home(user: user),
-          const Search(),
+          Tickets(user: user),
           const AskQuestion(),
           Notifications(user: user),
           Profile(user: user),
@@ -63,8 +63,9 @@ class HomePage extends HookConsumerWidget {
             activeIcon: Icon(Icons.home),
           ),
           BottomNavigationBarItem(
-            label: 'Search',
-            icon: Icon(Icons.search),
+            label: 'Tickets',
+            icon: Icon(Icons.help_outline),
+            activeIcon: Icon(Icons.help),
           ),
           BottomNavigationBarItem(
             label: 'Ask',

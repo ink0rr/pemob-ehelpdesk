@@ -5,10 +5,10 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../constants.dart';
 import '../../../providers/user.dart';
-import '../../question_page.dart';
+import '../../chat_page.dart';
 
-class Home extends HookConsumerWidget {
-  const Home({
+class Tickets extends HookConsumerWidget {
+  const Tickets({
     super.key,
     required this.user,
   });
@@ -53,7 +53,7 @@ class Home extends HookConsumerWidget {
                   ),
                   const SizedBox(height: 24),
                   StreamBuilder(
-                    stream: questions.snapshots(),
+                    stream: tickets.where('authorId', isEqualTo: user.uid).snapshots(),
                     builder: (context, snapshot) {
                       if (!snapshot.hasData) {
                         return const Center(
@@ -89,8 +89,8 @@ class Home extends HookConsumerWidget {
                                   borderRadius: BorderRadius.circular(16),
                                   onTap: () {
                                     Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => QuestionPage(
-                                        questionId: doc.id,
+                                      builder: (context) => ChatPage(
+                                        ticketId: doc.id,
                                       ),
                                     ));
                                   },
