@@ -11,7 +11,7 @@ class LabeledCheckbox extends HookWidget {
 
   final String label;
   final bool value;
-  final Function(bool?) onChanged;
+  final Function(bool) onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +28,9 @@ class LabeledCheckbox extends HookWidget {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(4),
               ),
-              onChanged: (_) {},
+              onChanged: (_) {
+                onChanged(!value);
+              },
             ),
           ),
           const SizedBox(width: 12),

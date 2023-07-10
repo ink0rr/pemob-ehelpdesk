@@ -107,7 +107,7 @@ class LoginPage extends HookConsumerWidget {
                             label: 'Remember me',
                             value: rememberMe.value,
                             onChanged: (value) {
-                              rememberMe.value = value!;
+                              rememberMe.value = value;
                             },
                           ),
                           TextButton(
