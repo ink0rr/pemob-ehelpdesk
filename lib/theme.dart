@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 abstract final class AppTheme {
   static const primaryColor = Color(0xFF6AB17E);
 
   static final themeData = ThemeData(
+    fontFamily: 'Poppins',
     primarySwatch: _getMaterialColor(AppTheme.primaryColor),
     appBarTheme: const AppBarTheme(
       systemOverlayStyle: SystemUiOverlayStyle(
@@ -14,7 +14,7 @@ abstract final class AppTheme {
       titleTextStyle: TextStyle(
         color: Colors.black,
         fontSize: 20,
-        fontWeight: FontWeight.w700,
+        fontWeight: FontWeight.bold,
       ),
       backgroundColor: Colors.transparent,
       shadowColor: Colors.transparent,
@@ -29,7 +29,7 @@ abstract final class AppTheme {
         ),
         textStyle: const TextStyle(
           fontSize: 16,
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.bold,
         ),
       ),
     ),
@@ -49,7 +49,6 @@ abstract final class AppTheme {
         ),
       ),
     ),
-    textTheme: GoogleFonts.poppinsTextTheme(),
   );
 }
 
