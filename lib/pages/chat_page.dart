@@ -25,7 +25,7 @@ class ChatPage extends HookWidget {
       input.addListener(() {
         isEmpty.value = input.text.trim() == '';
       });
-      return input.dispose;
+      return null;
     }, []);
 
     return Scaffold(
