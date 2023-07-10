@@ -8,7 +8,10 @@ import '../../../models/ticket.dart';
 import '../../chat_page.dart';
 
 class Home extends HookWidget {
-  const Home({super.key, required this.user});
+  const Home({
+    super.key,
+    required this.user,
+  });
 
   final User user;
 
@@ -75,13 +78,26 @@ class Home extends HookWidget {
                           final ticket = Ticket.fromJson(doc.data());
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 16),
-                            child: Card(
-                              elevation: 2,
-                              shadowColor: const Color(0xB2E2E4EB),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
+                            child: Ink(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(16),
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Color.fromRGBO(226, 228, 235, 70),
+                                    blurRadius: 40,
+                                    offset: Offset(0, 0),
+                                  ),
+                                  BoxShadow(
+                                    color: Color.fromRGBO(226, 228, 235, 70),
+                                    blurRadius: 15,
+                                    offset: Offset(0, 5),
+                                  ),
+                                ],
+                                shape: BoxShape.rectangle,
                               ),
                               child: InkWell(
+                                borderRadius: BorderRadius.circular(16),
                                 onTap: () {
                                   Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) => ChatPage(
