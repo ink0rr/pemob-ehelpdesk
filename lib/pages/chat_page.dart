@@ -25,7 +25,7 @@ class ChatPage extends HookWidget {
       input.addListener(() {
         isEmpty.value = input.text.trim() == '';
       });
-      return null;
+      return input.dispose;
     }, []);
 
     return Scaffold(
@@ -36,15 +36,11 @@ class ChatPage extends HookWidget {
         shadowColor: Colors.grey[100],
         actions: [
           IconButton(
-            onPressed: () {
-              // ...
-            },
+            onPressed: () {},
             icon: const Icon(Icons.thumb_up_outlined),
           ),
           IconButton(
-            onPressed: () {
-              // ...
-            },
+            onPressed: () {},
             icon: const Icon(Icons.thumb_down_outlined),
           ),
         ],
