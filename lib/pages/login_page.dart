@@ -6,6 +6,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../constants.dart';
+import '../theme.dart';
 import '../widgets/async_button.dart';
 import '../widgets/intrinsic_layout.dart';
 import '../widgets/labeled_checkbox.dart';
@@ -112,10 +113,10 @@ class LoginPage extends HookConsumerWidget {
                           ),
                           TextButton(
                             onPressed: () {},
-                            child: const Text(
+                            child: Text(
                               'Forgot Password?',
                               style: TextStyle(
-                                color: Color(0xFFF52F2F),
+                                color: Colors.red.shade400,
                               ),
                             ),
                           )
@@ -173,7 +174,7 @@ class LoginPage extends HookConsumerWidget {
                             TextSpan(
                               text: 'Register',
                               style: const TextStyle(
-                                color: Color(0xFF6AB17E),
+                                color: AppTheme.primaryColor,
                               ),
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () {

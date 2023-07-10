@@ -6,6 +6,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../constants.dart';
+import '../theme.dart';
 import '../widgets/async_button.dart';
 import '../widgets/intrinsic_layout.dart';
 import 'home_page.dart';
@@ -214,7 +215,7 @@ class RegisterPage extends HookConsumerWidget {
                             TextSpan(
                               text: 'Login',
                               style: const TextStyle(
-                                color: Color(0xFF6AB17E),
+                                color: AppTheme.primaryColor,
                               ),
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () {

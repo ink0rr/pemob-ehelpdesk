@@ -36,8 +36,8 @@ class LabeledCheckbox extends HookWidget {
           const SizedBox(width: 12),
           Text(
             label,
-            style: const TextStyle(
-              color: Color(0xFF747980),
+            style: TextStyle(
+              color: Colors.grey.shade600,
             ),
           ),
         ],

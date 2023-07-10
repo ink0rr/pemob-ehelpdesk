@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../constants.dart';
 import '../providers/user.dart';
+import '../theme.dart';
 import 'login_page.dart';
 import 'not_signed_in.dart';
 
@@ -19,7 +20,7 @@ class ProfilePage extends HookConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Profile'),
-        backgroundColor: const Color(0xFF6AB17E),
+        backgroundColor: AppTheme.primaryColor,
         systemOverlayStyle: const SystemUiOverlayStyle(
           statusBarBrightness: Brightness.dark,
         ),

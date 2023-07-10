@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
+import '../theme.dart';
+
 class ChatBubble extends HookWidget {
   const ChatBubble({
     super.key,
@@ -23,9 +25,9 @@ class ChatBubble extends HookWidget {
         child: Padding(
           padding: const EdgeInsets.all(4),
           child: DecoratedBox(
-            decoration: BoxDecoration(
-              color: Theme.of(context).primaryColor,
-              borderRadius: const BorderRadius.only(
+            decoration: const BoxDecoration(
+              color: AppTheme.primaryColor,
+              borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(20),
                 topRight: Radius.circular(20),
                 bottomLeft: Radius.circular(20),
