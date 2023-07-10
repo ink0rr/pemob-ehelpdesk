@@ -23,12 +23,22 @@ class Notifications extends HookConsumerWidget {
       body: SafeArea(
         child: TabBar(
           controller: controller,
-          tabs: [
+          tabs: const [
             Tab(
-              text: 'Umum',
+              child: Text(
+                'Umum',
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ),
             Tab(
-              text: 'Sistem',
+              child: Text(
+                'Sistem',
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             )
           ],
         ),
