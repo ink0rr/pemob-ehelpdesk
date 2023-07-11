@@ -38,7 +38,7 @@ class HomePage extends HookConsumerWidget {
       body: PageView(
         controller: controller,
         onPageChanged: (value) {
-          debounce(() => ref.read(pageProvider.notifier).state = value, 100);
+          debounce(() => ref.read(pageProvider.notifier).state = value, 250);
         },
         children: [
           Home(user: user),
