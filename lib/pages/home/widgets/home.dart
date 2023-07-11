@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../constants.dart';
@@ -97,35 +96,66 @@ class Home extends HookConsumerWidget {
                                   child: Padding(
                                     padding: const EdgeInsets.all(24),
                                     child: Row(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        SvgPicture.asset(
-                                          'assets/icons/question.svg',
-                                        ),
-                                        const SizedBox(width: 14),
                                         Flexible(
                                           child: Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
-                                              Text(
-                                                ticket.category,
-                                                style: const TextStyle(
-                                                  fontSize: 12,
-                                                ),
+                                              FutureBuilder(
+                                                future: getUserData(ticket.authorId),
+                                                builder: (context, snapshot) {
+                                                  if (!snapshot.hasData) {
+                                                    return const SizedBox();
+                                                  }
+                                                  final user = snapshot.data!;
+                                                  return Row(
+                                                    children: [
+                                                      CircleAvatar(
+                                                        radius: 16,
+                                                        child: ClipOval(
+                                                          child: Image.network(
+                                                            user.photoURL,
+                                                            fit: BoxFit.cover,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      const SizedBox(width: 8),
+                                                      Column(
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: [
+                                                          Text(
+                                                            user.username,
+                                                            style: const TextStyle(
+                                                                fontSize: 14, fontWeight: FontWeight.w500),
+                                                          ),
+                                                          const Text(
+                                                            'Just now',
+                                                            style: TextStyle(fontSize: 12),
+                                                          )
+                                                        ],
+                                                      )
+                                                    ],
+                                                  );
+                                                },
                                               ),
                                               const SizedBox(height: 8),
                                               Text(
                                                 ticket.title,
+                                                maxLines: 2,
                                                 style: const TextStyle(
                                                   fontSize: 18,
                                                   fontWeight: FontWeight.bold,
                                                 ),
                                               ),
                                               const SizedBox(height: 8),
-                                              Text(ticket.description),
+                                              Text(
+                                                ticket.description,
+                                                maxLines: 3,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
                                             ],
                                           ),
-                                        )
+                                        ),
                                       ],
                                     ),
                                   ),
