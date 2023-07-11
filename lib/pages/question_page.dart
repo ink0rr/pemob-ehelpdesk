@@ -21,7 +21,6 @@ class QuestionPage extends HookWidget {
     final isEmpty = useListenableSelector(input, () => input.text.trim().isEmpty);
 
     final answers = getAnswers(questionId);
-    final answerSnapshots = useStream(answers.snapshots());
 
     return Scaffold(
       appBar: AppBar(
@@ -73,9 +72,23 @@ class QuestionPage extends HookWidget {
                               const SizedBox(height: 32),
                               _VoteWidget(doc: question, votes: q.votes),
                               const Divider(),
-                              ...?answerSnapshots.data?.docs.map(
-                                (e) => _AnswerWiget(doc: e),
-                              )
+                              StreamBuilder(
+                                stream: answers.snapshots(),
+                                builder: (context, snapshot) {
+                                  if (!snapshot.hasData) {
+                                    return const Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  }
+                                  return Column(
+                                    children: [
+                                      ...snapshot.data!.docs.map(
+                                        (e) => _AnswerWiget(doc: e),
+                                      )
+                                    ],
+                                  );
+                                },
+                              ),
                             ],
                           );
                         },

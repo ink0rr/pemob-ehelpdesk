@@ -21,15 +21,6 @@ class ChatPage extends HookWidget {
     final scroll = useScrollController();
 
     final messages = getMessages(ticketId);
-    final messageStream = useStream(messages.orderBy('createdAt').snapshots());
-
-    useValueChanged(messageStream.data?.size, (_, __) {
-      return scroll.animateTo(
-        0,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeOut,
-      );
-    });
 
     return Scaffold(
       appBar: AppBar(
@@ -58,21 +49,38 @@ class ChatPage extends HookWidget {
         child: Column(
           children: [
             Expanded(
-              child: ListView(
-                controller: scroll,
-                reverse: true,
-                children: [
-                  const SizedBox(height: 24),
-                  ...?messageStream.data?.docs.reversed.map(
-                    (doc) {
-                      final message = doc.data();
-                      return ChatBubble(
-                        message: message.text,
-                        isSender: message.authorId == auth.currentUser!.uid,
-                      );
-                    },
-                  )
-                ],
+              child: StreamBuilder(
+                stream: messages.orderBy('createdAt').snapshots(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  if (scroll.hasClients) {
+                    scroll.animateTo(
+                      0,
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeOut,
+                    );
+                  }
+                  return ListView(
+                    controller: scroll,
+                    reverse: true,
+                    children: [
+                      const SizedBox(height: 24),
+                      ...snapshot.data!.docs.reversed.map(
+                        (doc) {
+                          final message = doc.data();
+                          return ChatBubble(
+                            message: message.text,
+                            isSender: message.authorId == auth.currentUser!.uid,
+                          );
+                        },
+                      )
+                    ],
+                  );
+                },
               ),
             ),
             Padding(
