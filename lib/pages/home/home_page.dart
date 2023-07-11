@@ -40,12 +40,12 @@ class HomePage extends HookConsumerWidget {
         onPageChanged: (value) {
           debounce(() => ref.read(pageProvider.notifier).state = value, 250);
         },
-        children: [
-          Home(user: user),
-          Tickets(user: user),
-          const AskQuestion(),
-          Notifications(user: user),
-          Profile(user: user),
+        children: const [
+          Home(),
+          Tickets(),
+          AskQuestion(),
+          Notifications(),
+          Profile(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
