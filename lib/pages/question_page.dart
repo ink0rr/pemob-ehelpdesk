@@ -221,7 +221,7 @@ class _HeadingWidget extends HookWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              username,
+              '@$username',
               style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
