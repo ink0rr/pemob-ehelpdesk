@@ -252,54 +252,68 @@ class _VoteWidget extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userProvider)!;
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        InkWell(
-          borderRadius: BorderRadius.circular(64),
-          onTap: () {
-            if (votes[user.uid] == 1) {
-              doc.update({'votes.${user.uid}': FieldValue.delete()});
-            } else {
-              doc.update({'votes.${user.uid}': 1});
-            }
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(2),
-            child: Icon(
-              Icons.keyboard_arrow_up,
-              color: votes[user.uid] == 1 ? AppTheme.primaryColor : Colors.grey.shade600,
+    final vote = votes[user.uid];
+
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: Colors.grey.shade200,
+        borderRadius: BorderRadius.circular(24),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          InkWell(
+            borderRadius: BorderRadius.circular(64),
+            onTap: () {
+              if (vote == 1) {
+                doc.update({'votes.${user.uid}': FieldValue.delete()});
+              } else {
+                doc.update({'votes.${user.uid}': 1});
+              }
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(2),
+              child: Icon(
+                Icons.keyboard_arrow_up,
+                color: vote == 1 ? AppTheme.primaryColor : Colors.grey.shade600,
+              ),
             ),
           ),
-        ),
-        const SizedBox(width: 6),
-        Text(
-          votes.values.fold(0, (p, c) => p + c).toString(),
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        const SizedBox(width: 6),
-        InkWell(
-          borderRadius: BorderRadius.circular(64),
-          onTap: () {
-            if (votes[user.uid] == -1) {
-              doc.update({'votes.${user.uid}': FieldValue.delete()});
-            } else {
-              doc.update({'votes.${user.uid}': -1});
-            }
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(2),
-            child: Icon(
-              Icons.keyboard_arrow_down,
-              color: votes[user.uid] == -1 ? Colors.red : Colors.grey.shade600,
+          const SizedBox(width: 6),
+          Text(
+            votes.values.fold(0, (p, c) => p + c).toString(),
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: vote == 1
+                  ? AppTheme.primaryColor
+                  : vote == -1
+                      ? Colors.red
+                      : Colors.grey.shade600,
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
             ),
           ),
-        )
-      ],
+          const SizedBox(width: 6),
+          InkWell(
+            borderRadius: BorderRadius.circular(64),
+            onTap: () {
+              if (vote == -1) {
+                doc.update({'votes.${user.uid}': FieldValue.delete()});
+              } else {
+                doc.update({'votes.${user.uid}': -1});
+              }
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(2),
+              child: Icon(
+                Icons.keyboard_arrow_down,
+                color: vote == -1 ? Colors.red : Colors.grey.shade600,
+              ),
+            ),
+          )
+        ],
+      ),
     );
   }
 }
