@@ -164,7 +164,7 @@ class _AnswerWiget extends HookWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    author.username,
+                    '@${author.username}',
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,

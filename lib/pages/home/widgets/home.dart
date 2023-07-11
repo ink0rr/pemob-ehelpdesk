@@ -124,7 +124,7 @@ class Home extends HookConsumerWidget {
                                                         crossAxisAlignment: CrossAxisAlignment.start,
                                                         children: [
                                                           Text(
-                                                            user.username,
+                                                            '@${user.username}',
                                                             style: const TextStyle(
                                                                 fontSize: 14, fontWeight: FontWeight.w500),
                                                           ),

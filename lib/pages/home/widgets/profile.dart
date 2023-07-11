@@ -92,7 +92,7 @@ class Profile extends HookConsumerWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  data.username,
+                  '@${data.username}',
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
