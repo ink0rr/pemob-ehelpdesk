@@ -59,10 +59,11 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyApjZGWw2XDA0rEiOmg1C6jkhMel8B0K0k',
-    appId: '1:894696116565:ios:f2087620e7604cf06f5fdc',
+    appId: '1:894696116565:ios:18c93dc956fb93b16f5fdc',
     messagingSenderId: '894696116565',
     projectId: 'ehelpdesk-ueu',
     storageBucket: 'ehelpdesk-ueu.appspot.com',
+    androidClientId: '894696116565-0nevnfegd8gq7m340sik9829t9nf92ab.apps.googleusercontent.com',
     iosClientId: '894696116565-3dbtdj800ee42tmrn9fj9ov9v3sirsi1.apps.googleusercontent.com',
     iosBundleId: 'com.example.ehelpdesk',
   );
