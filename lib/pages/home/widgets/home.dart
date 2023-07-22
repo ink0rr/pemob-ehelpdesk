@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:timeago/timeago.dart';
 
 import '../../../constants.dart';
 import '../../../widgets/status_badge.dart';
@@ -118,9 +119,9 @@ class Home extends HookWidget {
                                                               overflow: TextOverflow.ellipsis,
                                                             ),
                                                           ),
-                                                          const Text(
-                                                            'Just now',
-                                                            style: TextStyle(fontSize: 12),
+                                                          Text(
+                                                            format(ticket.createdAt),
+                                                            style: const TextStyle(fontSize: 12),
                                                           )
                                                         ],
                                                       ),

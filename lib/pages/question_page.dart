@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:timeago/timeago.dart';
 
 import '../constants.dart';
 import '../models/answer.dart';
@@ -55,9 +56,39 @@ class QuestionPage extends HookWidget {
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              _HeadingWidget(
-                                username: author.username,
-                                photoURL: author.photoURL,
+                              Row(
+                                children: [
+                                  CircleAvatar(
+                                    radius: 22,
+                                    child: ClipOval(
+                                      child: Image.network(
+                                        author.photoURL,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        '@${author.username}',
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      Text(
+                                        format(q.createdAt),
+                                        style: TextStyle(
+                                          color: Colors.grey.shade600,
+                                          fontSize: 14,
+                                        ),
+                                      )
+                                    ],
+                                  )
+                                ],
                               ),
                               const SizedBox(height: 16),
                               Text(
@@ -184,7 +215,7 @@ class _AnswerWiget extends HookWidget {
                     ),
                   ),
                   Text(
-                    'Just now',
+                    format(answer.createdAt),
                     style: TextStyle(
                       color: Colors.grey.shade600,
                       fontSize: 14,
@@ -202,54 +233,6 @@ class _AnswerWiget extends HookWidget {
           ),
         );
       },
-    );
-  }
-}
-
-class _HeadingWidget extends HookWidget {
-  const _HeadingWidget({
-    required this.username,
-    required this.photoURL,
-  });
-
-  final String username;
-  final String photoURL;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        CircleAvatar(
-          radius: 22,
-          child: ClipOval(
-            child: Image.network(
-              photoURL,
-              fit: BoxFit.cover,
-            ),
-          ),
-        ),
-        const SizedBox(width: 8),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              '@$username',
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            Text(
-              'Just now',
-              style: TextStyle(
-                color: Colors.grey.shade600,
-                fontSize: 14,
-              ),
-            )
-          ],
-        )
-      ],
     );
   }
 }
