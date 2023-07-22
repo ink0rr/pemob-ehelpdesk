@@ -136,6 +136,7 @@ class AskQuestion extends HookConsumerWidget {
                           category: category.value!,
                           title: title.text,
                           description: description.text,
+                          status: 'OPEN',
                           votes: {},
                           authorId: auth.currentUser!.uid,
                           createdAt: DateTime.now(),
@@ -147,6 +148,7 @@ class AskQuestion extends HookConsumerWidget {
                           category: category.value!,
                           title: title.text,
                           description: description.text,
+                          status: 'OPEN',
                           authorId: auth.currentUser!.uid,
                           createdAt: DateTime.now(),
                         ));

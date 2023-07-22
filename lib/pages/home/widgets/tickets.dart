@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../../../constants.dart';
+import '../../../widgets/status_badge.dart';
 import '../../chat_page.dart';
 
 class Tickets extends HookWidget {
@@ -92,11 +93,19 @@ class Tickets extends HookWidget {
                                         child: Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
-                                            Text(
-                                              ticket.category,
-                                              style: const TextStyle(
-                                                fontSize: 12,
-                                              ),
+                                            Row(
+                                              children: [
+                                                Flexible(
+                                                  child: Text(
+                                                    ticket.category,
+                                                    style: const TextStyle(
+                                                      fontSize: 12,
+                                                    ),
+                                                  ),
+                                                ),
+                                                const SizedBox(width: 8),
+                                                StatusBadge(status: ticket.status)
+                                              ],
                                             ),
                                             const SizedBox(height: 8),
                                             Text(
@@ -110,7 +119,7 @@ class Tickets extends HookWidget {
                                             Text(ticket.description),
                                           ],
                                         ),
-                                      )
+                                      ),
                                     ],
                                   ),
                                 ),

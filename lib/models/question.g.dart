@@ -10,6 +10,7 @@ Question _$QuestionFromJson(Map<String, dynamic> json) => Question(
       category: json['category'] as String,
       title: json['title'] as String,
       description: json['description'] as String,
+      status: json['status'] as String,
       votes: Map<String, int>.from(json['votes'] as Map),
       authorId: json['authorId'] as String,
       createdAt:
@@ -20,6 +21,7 @@ Map<String, dynamic> _$QuestionToJson(Question instance) => <String, dynamic>{
       'category': instance.category,
       'title': instance.title,
       'description': instance.description,
+      'status': instance.status,
       'votes': instance.votes,
       'authorId': instance.authorId,
       'createdAt': const TimestampConverter().toJson(instance.createdAt),

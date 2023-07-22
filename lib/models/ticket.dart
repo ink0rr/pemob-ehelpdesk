@@ -11,6 +11,7 @@ class Ticket {
     required this.category,
     required this.title,
     required this.description,
+    required this.status,
     required this.authorId,
     required this.createdAt,
   });
@@ -18,6 +19,7 @@ class Ticket {
   final String category;
   final String title;
   final String description;
+  final String status;
   final String authorId;
   @TimestampConverter()
   final DateTime createdAt;
