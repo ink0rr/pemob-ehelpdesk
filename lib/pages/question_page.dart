@@ -42,10 +42,10 @@ class QuestionPage extends HookWidget {
                           child: CircularProgressIndicator(),
                         );
                       }
-                      final question = snapshot.data!.reference;
-                      final q = snapshot.data!.data()!;
+                      final questionRef = snapshot.data!.reference;
+                      final question = snapshot.data!.data()!;
                       return FutureBuilder(
-                        future: getUserData(q.authorId),
+                        future: getUserData(question.authorId),
                         builder: (context, snapshot) {
                           if (!snapshot.hasData) {
                             return const Center(
@@ -80,7 +80,7 @@ class QuestionPage extends HookWidget {
                                         ),
                                       ),
                                       Text(
-                                        format(q.createdAt),
+                                        format(question.createdAt),
                                         style: TextStyle(
                                           color: Colors.grey.shade600,
                                           fontSize: 14,
@@ -92,16 +92,16 @@ class QuestionPage extends HookWidget {
                               ),
                               const SizedBox(height: 16),
                               Text(
-                                q.title,
+                                question.title,
                                 style: const TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
                               const SizedBox(height: 8),
-                              Text(q.description),
+                              Text(question.description),
                               const SizedBox(height: 32),
-                              _VoteWidget(doc: question, votes: q.votes),
+                              _VoteWidget(doc: questionRef, votes: question.votes),
                               const Divider(),
                               StreamBuilder(
                                 stream: answers.snapshots(),
@@ -113,9 +113,115 @@ class QuestionPage extends HookWidget {
                                   }
                                   return Column(
                                     children: [
-                                      ...snapshot.data!.docs.map(
-                                        (e) => _AnswerWiget(doc: e),
-                                      )
+                                      ...snapshot.data!.docs.map((doc) {
+                                        final answer = doc.data();
+                                        return FutureBuilder(
+                                          future: getUserData(answer.authorId),
+                                          builder: (context, snapshot) {
+                                            if (!snapshot.hasData) {
+                                              return const Center(
+                                                child: CircularProgressIndicator(),
+                                              );
+                                            }
+                                            final author = snapshot.data!;
+                                            return Padding(
+                                              padding: const EdgeInsets.all(8),
+                                              child: Row(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  CircleAvatar(
+                                                    radius: 20,
+                                                    child: ClipOval(
+                                                      child: Image.network(
+                                                        author.photoURL,
+                                                        fit: BoxFit.cover,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  const SizedBox(width: 8),
+                                                  Flexible(
+                                                    child: Column(
+                                                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        Text(
+                                                          '@${author.username}',
+                                                          style: const TextStyle(
+                                                            fontSize: 16,
+                                                            fontWeight: FontWeight.w600,
+                                                          ),
+                                                        ),
+                                                        Text(
+                                                          format(answer.createdAt),
+                                                          style: TextStyle(
+                                                            color: Colors.grey.shade600,
+                                                            fontSize: 14,
+                                                          ),
+                                                        ),
+                                                        const SizedBox(height: 8),
+                                                        Text(answer.text),
+                                                        const SizedBox(height: 16),
+                                                        Row(
+                                                          children: [
+                                                            _VoteWidget(doc: doc.reference, votes: answer.votes),
+                                                            const SizedBox(width: 16),
+                                                            if (question.answerId == doc.id)
+                                                              DecoratedBox(
+                                                                decoration: BoxDecoration(
+                                                                  color: Colors.green,
+                                                                  borderRadius: BorderRadius.circular(24),
+                                                                ),
+                                                                child: const Padding(
+                                                                  padding: EdgeInsets.symmetric(
+                                                                    horizontal: 6,
+                                                                    vertical: 4,
+                                                                  ),
+                                                                  child: Text(
+                                                                    'Accepted Answer',
+                                                                    style: TextStyle(
+                                                                      color: Colors.white,
+                                                                      fontWeight: FontWeight.w600,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              )
+                                                          ],
+                                                        ),
+                                                        const SizedBox(height: 16),
+                                                        const Divider(),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  PopupMenuButton(
+                                                    itemBuilder: (context) => [
+                                                      if (auth.currentUser!.uid == question.authorId)
+                                                        PopupMenuItem(
+                                                          child: const Text('Mark as Answer'),
+                                                          onTap: () {
+                                                            questionRef.update({
+                                                              'status': 'RESOLVED',
+                                                              'answerId': doc.id,
+                                                            });
+                                                          },
+                                                        ),
+                                                      if (auth.currentUser!.uid == answer.authorId)
+                                                        PopupMenuItem(
+                                                          child: const Text('Delete'),
+                                                          onTap: () {
+                                                            doc.reference.delete();
+                                                          },
+                                                        ),
+                                                      const PopupMenuItem(
+                                                        child: Text('Report'),
+                                                      )
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      })
                                     ],
                                   );
                                 },
@@ -164,75 +270,6 @@ class QuestionPage extends HookWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-class _AnswerWiget extends HookWidget {
-  const _AnswerWiget({
-    required this.doc,
-  });
-
-  final QueryDocumentSnapshot<Answer> doc;
-
-  @override
-  Widget build(BuildContext context) {
-    final answer = doc.data();
-    return FutureBuilder(
-      future: getUserData(answer.authorId),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-        final author = snapshot.data!;
-        return Padding(
-          padding: const EdgeInsets.all(8),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CircleAvatar(
-                radius: 20,
-                child: ClipOval(
-                  child: Image.network(
-                    author.photoURL,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Flexible(
-                  child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '@${author.username}',
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  Text(
-                    format(answer.createdAt),
-                    style: TextStyle(
-                      color: Colors.grey.shade600,
-                      fontSize: 14,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(answer.text),
-                  const SizedBox(height: 16),
-                  _VoteWidget(doc: doc.reference, votes: answer.votes),
-                  const SizedBox(height: 16),
-                  const Divider(),
-                ],
-              ))
-            ],
-          ),
-        );
-      },
     );
   }
 }

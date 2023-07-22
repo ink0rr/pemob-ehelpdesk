@@ -13,6 +13,7 @@ class Question {
     required this.description,
     required this.status,
     required this.votes,
+    this.answerId,
     required this.authorId,
     required this.createdAt,
   });
@@ -22,6 +23,7 @@ class Question {
   final String description;
   final String status;
   final Map<String, int> votes;
+  final String? answerId;
   final String authorId;
   @TimestampConverter()
   final DateTime createdAt;
