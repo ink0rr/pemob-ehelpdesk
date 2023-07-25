@@ -34,8 +34,8 @@ class QuestionPage extends HookWidget {
               child: SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.all(24),
-                  child: FutureBuilder(
-                    future: questions.doc(questionId).get(),
+                  child: StreamBuilder(
+                    stream: questions.doc(questionId).snapshots(),
                     builder: (context, snapshot) {
                       if (!snapshot.hasData) {
                         return const Center(
