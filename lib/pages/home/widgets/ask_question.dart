@@ -17,9 +17,10 @@ class AskQuestion extends HookConsumerWidget {
   final List<String> categories = const [
     'Materi Perkuliahan',
     'Siakad',
-    'E-learning',
+    'E-Learning',
     'Jadwal Kuliah',
     'Biaya Kuliah',
+    'Lainnya'
   ];
 
   final List<String> types = const [
