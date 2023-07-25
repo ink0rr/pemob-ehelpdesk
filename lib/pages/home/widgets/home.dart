@@ -39,14 +39,13 @@ class Home extends HookWidget {
                 ),
                 const SizedBox(height: 24),
                 StreamBuilder(
-                  stream: questions.snapshots(),
+                  stream: questions.orderBy('createdAt', descending: true).snapshots(),
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) {
                       return const Center(
                         child: CircularProgressIndicator(),
                       );
                     }
-
                     return Column(
                       children: [
                         ...snapshot.data!.docs.map((doc) {
