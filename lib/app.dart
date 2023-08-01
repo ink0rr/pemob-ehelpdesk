@@ -21,6 +21,7 @@ class App extends HookConsumerWidget {
     }, []);
     return MaterialApp(
       title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
       theme: AppTheme.themeData,
       home: auth.currentUser != null ? const HomePage() : const LoginPage(),
     );

@@ -164,7 +164,7 @@ class QuestionPage extends HookWidget {
                                                         Row(
                                                           children: [
                                                             _VoteWidget(doc: doc.reference, votes: answer.votes),
-                                                            const SizedBox(width: 16),
+                                                            const SizedBox(width: 8),
                                                             if (question.answerId == doc.id)
                                                               DecoratedBox(
                                                                 decoration: BoxDecoration(
@@ -181,6 +181,7 @@ class QuestionPage extends HookWidget {
                                                                     style: TextStyle(
                                                                       color: Colors.white,
                                                                       fontWeight: FontWeight.w600,
+                                                                      overflow: TextOverflow.ellipsis,
                                                                     ),
                                                                   ),
                                                                 ),

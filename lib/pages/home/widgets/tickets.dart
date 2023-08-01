@@ -46,7 +46,6 @@ class Tickets extends HookWidget {
                         child: CircularProgressIndicator(),
                       );
                     }
-
                     return Column(
                       children: [
                         ...snapshot.data!.docs.map((doc) {
